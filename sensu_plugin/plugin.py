@@ -21,11 +21,13 @@ ExitCode = namedtuple('ExitCode', ['OK', 'WARNING', 'CRITICAL', 'UNKNOWN'])
 
 class SensuPlugin(object):
     def __init__(self):
-        self._check_name = None
-        self._message = None
-        self.status = None
-        self.hook = ExitHook()
-        self.hook.hook()
+        self.plugin_info = {
+            'check_name': None,
+            'message': None,
+            'status': None
+        }
+        self._hook = ExitHook()
+        self._hook.hook()
 
         self.exit_code = ExitCode(0, 1, 2, 3)
         for field in self.exit_code._fields:
@@ -46,7 +48,7 @@ class SensuPlugin(object):
     def __make_dynamic(self, method):
 
         def dynamic(*args):
-            self.status = method
+            self.plugin_info['status'] = method
             if len(args) == 0:
                 args = None
             self.output(args)
@@ -61,12 +63,12 @@ class SensuPlugin(object):
         self.warning("Not implemented! You should override SensuPlugin.run()")
 
     def __exitfunction(self):
-        if self.hook.exit_code is None and self.hook.exception is None:
+        if self._hook.exit_code is None and self._hook.exception is None:
             print("Check did not exit! You should call an exit code method.")
             sys.stdout.flush()
             os._exit(1)
-        elif self.hook.exception:
-            print("Check failed to run: %s, %s" % (sys.last_type,
-                traceback.format_tb(sys.last_traceback)))
+        elif self._hook.exception:
+            print("Check failed to run: %s, %s" %
+                 (sys.last_type, traceback.format_tb(sys.last_traceback)))
             sys.stdout.flush()
             os._exit(2)
