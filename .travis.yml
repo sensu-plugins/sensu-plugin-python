@@ -11,6 +11,7 @@ install:
     - pip install -r requirements_test.txt
 
 script:
+    - ruby --version
     - pep8 sensu_plugin
     - pylint --rcfile=pylint.rc sensu_plugin
     - nosetests sensu_plugin/test/
