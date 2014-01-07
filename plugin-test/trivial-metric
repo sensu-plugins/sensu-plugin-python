@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+#coding=utf-8
+
+#
+# Copyright (C) 2014 - S. Zachariah Sprackett <zac@sprackett.com>
+#
+
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../')
+from sensu_plugin import SensuPluginMetricJSON
+
+
+class TestMetric(SensuPluginMetricJSON):
+    def run(self):
+        self.ok({'hello': 1234})
+
+if __name__ == "__main__":
+    f = TestMetric()
