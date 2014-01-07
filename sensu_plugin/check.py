@@ -16,7 +16,7 @@ class SensuPluginCheck(SensuPlugin):
         if name:
             self._check_name = name
 
-        if hasattr(self, '_check_name'):
+        if self._check_name is not None:
             return self._check_name
 
         return self.__class__.__name__
