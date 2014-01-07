@@ -2,3 +2,4 @@ argparse
 nose
 pep8
 pylint
+coverage
