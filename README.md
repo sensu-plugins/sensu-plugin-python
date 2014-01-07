@@ -6,7 +6,7 @@ This is a framework for writing your own [Sensu](https://github.com/sensu/sensu)
 It's not required to write a plugin (most Nagios plugins will work
 without modification); it just makes it easier.
 
-[![Build Status](https://travis-ci.org/zsprackett/python_sensu_plugin.png?branch=master)](https://travis-ci.org/zsprackett/python_sensu_plugin)
+[![Build Status](https://travis-ci.org/sensu/sensu-plugin-python.png?branch=master)](https://travis-ci.org/sensu/sensu-plugin-python)
 
 ## Checks
 
