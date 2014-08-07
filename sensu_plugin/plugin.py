@@ -12,6 +12,7 @@ import atexit
 import sys
 import argparse
 import os
+import glob
 import traceback
 from collections import namedtuple
 from sensu_plugin.exithook import ExitHook
@@ -28,7 +29,7 @@ class SensuPlugin(object):
         }
         self._hook = ExitHook()
         self._hook.hook()
-
+        self.settings = self.something()
         self.exit_code = ExitCode(0, 1, 2, 3)
         for field in self.exit_code._fields:
             self.__make_dynamic(field)
@@ -41,6 +42,24 @@ class SensuPlugin(object):
         (self.options, self.remain) = self.parser.parse_known_args()
 
         self.run()
+
+    def something(self):
+        # Load the config file
+        # Read the damn json in settings
+        if os.env['SENSU_CONFIG_FILES']:
+            file_path = os.env['SENSU_CONFIG_FILES'].split(':')
+        #else:
+        file_path = '/etc/sensu/conf.d/**/*.json'
+        settings = {}
+        for filename in glob.iglob(file_path):
+            with open(filename) as f:
+                all_data = json.load(f)
+                for k,v in all_data:
+                    if k != 'checks':
+                        settings[k] = v
+        return settings
+
+
 
     def output(self, args):
         print("SensuPlugin: %s" % ' '.join(str(a) for a in args))
