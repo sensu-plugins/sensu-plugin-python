@@ -31,7 +31,7 @@ class SensuPlugin(object):
         self.settings = {}
         self._hook = ExitHook()
         self._hook.hook()
-        self.something()
+        self.get_settings()
         self.exit_code = ExitCode(0, 1, 2, 3)
         for field in self.exit_code._fields:
             self.__make_dynamic(field)
@@ -55,12 +55,7 @@ class SensuPlugin(object):
             if k != 'checks':
                 self.settings[k] = v
 
-    def something(self):
-        """
-        for subdir, dir, files in os.walk(file_path):
-        for file in files:
-        print subdir+'/'+file
-        """
+    def get_settings(self):
         # Check if config.json exists
         config_file = '/etc/sensu/config.json'
         config_file_path = '/etc/sensu/conf.d/'
