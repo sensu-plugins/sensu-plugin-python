@@ -12,6 +12,7 @@ import atexit
 import sys
 import argparse
 import os
+import json
 import glob
 import traceback
 from collections import namedtuple
@@ -27,9 +28,10 @@ class SensuPlugin(object):
             'message': None,
             'status': None
         }
+        self.settings = {}
         self._hook = ExitHook()
         self._hook.hook()
-        self.settings = self.something()
+        self.something()
         self.exit_code = ExitCode(0, 1, 2, 3)
         for field in self.exit_code._fields:
             self.__make_dynamic(field)
@@ -43,22 +45,33 @@ class SensuPlugin(object):
 
         self.run()
 
-    def something(self):
-        # Load the config file
-        # Read the damn json in settings
-        if os.env['SENSU_CONFIG_FILES']:
-            file_path = os.env['SENSU_CONFIG_FILES'].split(':')
-        #else:
-        file_path = '/etc/sensu/conf.d/**/*.json'
-        settings = {}
-        for filename in glob.iglob(file_path):
-            with open(filename) as f:
-                all_data = json.load(f)
-                for k,v in all_data:
-                    if k != 'checks':
-                        settings[k] = v
-        return settings
+    def get_json(self, file_name):
+        """
+        You have the file name,
+        use this to get all the keys except checks and add the rest keys to settings.
+        """
+        all_data = json.load(file_name)
+        for k,v in all_data:
+            if k != 'checks':
+                self.settings[k] = v
 
+    def something(self):
+        """
+        for subdir, dir, files in os.walk(file_path):
+        for file in files:
+        print subdir+'/'+file
+        """
+        # Check if config.json exists
+        config_file = '/etc/sensu/config.json'
+        config_file_path = '/etc/sensu/conf.d/'
+
+        if os.path.isfile(config_file):
+            with open(config_file) as f:
+                self.get_json(f)
+        else:
+            for subdir, dir, files in os.walk(config_file_path):
+                for file in files:
+                    self.get_json(file)
 
 
     def output(self, args):
