@@ -23,6 +23,7 @@ ExitCode = namedtuple('ExitCode', ['OK', 'WARNING', 'CRITICAL', 'UNKNOWN'])
 class SensuPlugin(object):
     def __init__(self):
         self.settings = {}
+        self.config_files = ['/etc/sensu/config.json', '/etc/sensu/conf.d/']
         self.get_settings()
         self.plugin_info = {
             'check_name': None,
@@ -49,9 +50,11 @@ class SensuPlugin(object):
             self.settings[key[0]] = key[1]
 
     def get_settings(self):
-        config_files = ['/etc/sensu/config.json', '/etc/sensu/conf.d/']
+        if os.environ['SENSU_CONFIG_FILE']:
+            env_var = os.environ['SENSU_CONFIG_FILE']
+            self.config_files.append(env_var)
 
-        for config_file in config_files:
+        for config_file in self.config_files:
             if os.path.isfile(config_file):
                 with open(config_file) as f_handler:
                     self.get_json(f_handler)
@@ -93,3 +96,4 @@ class SensuPlugin(object):
                   (sys.last_type, traceback.format_tb(sys.last_traceback)))
             sys.stdout.flush()
             os._exit(2)
+
