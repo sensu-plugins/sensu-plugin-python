@@ -61,4 +61,5 @@ class ServiceCheck(SensuPluginCheck):
             self.ok("Overriding message")
 
 if __name__ == "__main__":
+    os.environ['SENSU_CONFIG_FILE'] = "plugin-test/service-check.json"
     f = ServiceCheck()
