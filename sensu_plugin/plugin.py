@@ -56,7 +56,7 @@ class SensuPlugin(object):
                 with open(config_file) as f_handler:
                     self.get_json(f_handler)
             elif os.path.isdir(config_file):
-                for dirs, sub_dirs, files in os.walk(config_file):
+                for _, _, files in os.walk(config_file):
                     for f_file in files:
                         f_path = config_file+f_file
                         if f_path.endswith('.json'):
