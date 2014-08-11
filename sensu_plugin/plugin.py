@@ -46,7 +46,7 @@ class SensuPlugin(object):
     def get_json(self, file_handler):
         all_data = json.load(file_handler)
         for key in all_data.iteritems():
-            self.settings[key[0]]=key[1]
+            self.settings[key[0]] = key[1]
 
     def get_settings(self):
         config_files = ['/etc/sensu/config.json', '/etc/sensu/conf.d/']
@@ -57,8 +57,8 @@ class SensuPlugin(object):
                     self.get_json(f_handler)
             elif os.path.isdir(config_file):
                 for dirs, sub_dirs, files in os.walk(config_file):
-                    for f in files:
-                        f_path = config_file+f
+                    for f_file in files:
+                        f_path = config_file+f_file
                         if f_path.endswith('.json'):
                             with open(f_path) as f_handler:
                                 self.get_json(f_handler)
