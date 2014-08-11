@@ -34,7 +34,6 @@ class SensuPlugin(object):
         self.exit_code = ExitCode(0, 1, 2, 3)
         for field in self.exit_code._fields:
             self.__make_dynamic(field)
-
         atexit.register(self.__exitfunction)
 
         self.parser = argparse.ArgumentParser()
@@ -63,8 +62,6 @@ class SensuPlugin(object):
                         if f_path.endswith('.json'):
                             with open(f_path) as f_handler:
                                 self.get_json(f_handler)
-            else:
-                self.warning("Config files not found")
 
     def output(self, args):
         print("SensuPlugin: %s" % ' '.join(str(a) for a in args))
@@ -96,4 +93,3 @@ class SensuPlugin(object):
                   (sys.last_type, traceback.format_tb(sys.last_traceback)))
             sys.stdout.flush()
             os._exit(2)
-
