@@ -23,7 +23,6 @@ ExitCode = namedtuple('ExitCode', ['OK', 'WARNING', 'CRITICAL', 'UNKNOWN'])
 class SensuPlugin(object):
     def __init__(self):
         self.settings = {}
-        self.tupl_list = []
         self.get_settings()
         self.plugin_info = {
             'check_name': None,
@@ -51,19 +50,21 @@ class SensuPlugin(object):
             self.settings[key[0]]=key[1]
 
     def get_settings(self):
-        config_file = '/etc/sensu/config.json'
-        config_file_path = '/etc/sensu/conf.d/'
+        config_files = ['/etc/sensu/config.json', '/etc/sensu/conf.d/']
 
-        if os.path.isfile(config_file):
-            with open(config_file) as f_handler:
-                self.get_json(f_handler)
-        else:
-            for dirs, sub_dirs, files in os.walk(config_file_path):
-                for f in files:
-                    f_path = config_file_path+f
-                    if f_path.endswith('.json'):
-                        with open(f_path) as f_handler:
-                            self.get_json(f_handler)
+        for config_file in config_files:
+            if os.path.isfile(config_file):
+                with open(config_file) as f_handler:
+                    self.get_json(f_handler)
+            elif os.path.isdir(config_file):
+                for dirs, sub_dirs, files in os.walk(config_file):
+                    for f in files:
+                        f_path = config_file+f
+                        if f_path.endswith('.json'):
+                            with open(f_path) as f_handler:
+                                self.get_json(f_handler)
+            else:
+                self.warning("Config files not found")
 
     def output(self, args):
         print("SensuPlugin: %s" % ' '.join(str(a) for a in args))
@@ -95,3 +96,4 @@ class SensuPlugin(object):
                   (sys.last_type, traceback.format_tb(sys.last_traceback)))
             sys.stdout.flush()
             os._exit(2)
+
