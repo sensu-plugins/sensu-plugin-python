@@ -1,0 +1,23 @@
+{
+    "checks": {
+        "check_nat": {
+            "command": "/etc/sensu/plugins/check-nat.py",
+            "interval": 300,
+            "subscribers": [ "master" ],
+            "occurrences": 3
+        }
+    },
+
+    "A":{
+        "nat1":"i-11",
+        "nat2":"i-22",
+        "rt":"rtb-33"
+    },
+
+    "B":{
+        "nat1":"i-111",
+        "nat2":"i-222",
+        "rt":"rtb-333"
+    }
+
+}

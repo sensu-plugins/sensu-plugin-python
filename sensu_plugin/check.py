@@ -33,4 +33,4 @@ class SensuPluginCheck(SensuPlugin):
             msg = ": {}".format(' '.join(str(message) for message in m))
 
         print("{} {}{}".format(self.check_name(),
-              self.plugin_info['status'], msg))
+                               self.plugin_info['status'], msg))
