@@ -23,7 +23,7 @@ class SensuHandler(object):
         sys.exit(0)
 
     def filter_disabled(self):
-        if 'alert' in self.event['check'] and self.event['check']['alert'] == False
+        if 'alert' in self.event['check'] and self.event['check']['alert'] == False:
             self.bail("Alert Disabled")
 
     def filter_repeated(self):
