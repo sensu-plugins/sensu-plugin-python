@@ -8,6 +8,7 @@ class SensuHandler(object):
     def __init__(self):
         self.settings = SensuUtils.settings()
         self.event = SensuUtils.read_event(sys.stdin.readline())
+        self.filter()
         self.handle()
 
     def handle(self):
@@ -23,13 +24,13 @@ class SensuHandler(object):
         sys.exit(0)
 
     def filter_disabled(self):
-        if 'alert' in self.event['check'] and self.event['check']['alert'] == False:
+        if self.event['check'].get('alert', True) == False:
             self.bail("Alert Disabled")
 
     def filter_repeated(self):
-        occurrences = self.event['check']['occurrences'] if 'occurrences' in self.event['check'] else 1
-        interval = self.event['check']['interval'] if 'interval' in self.event['check'] else 30
-        refresh = self.event['check']['refresh'] if 'refresh' in self.event['check'] else 1800
+        occurrences = self.event['check'].get('occurrences', 1)
+        interval = self.event['check'].get('interval', 30)
+        refresh = self.event['check'].get('refresh', 1800)
 
         if self.event['occurrences'] < occurrences:
             self.bail("Not enough occurrences")
