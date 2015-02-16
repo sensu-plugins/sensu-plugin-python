@@ -32,5 +32,5 @@ class SensuPluginCheck(SensuPlugin):
         if m is not None and not (m[0] is None and len(m) == 1):
             msg = ": {}".format(' '.join(str(message) for message in m))
 
-        print("{} {}{}".format(self.check_name(),
-              self.plugin_info['status'], msg))
+        check_name = self.check_name()
+        print("{} {}{}".format(check_name, self.plugin_info['status'], msg))

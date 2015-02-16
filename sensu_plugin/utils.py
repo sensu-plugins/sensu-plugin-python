@@ -3,7 +3,7 @@
 
 import os
 import json
-from sensu_plugin.memo import memoize
+from sensu_plugin.conf_cache import ConfCache
 
 
 class SensuUtils(object):
@@ -16,6 +16,8 @@ class SensuUtils(object):
         else:
             config_files.append('/etc/sensu/config.json')
             for root, subdir, files in os.walk('/etc/sensu/conf.d'):
+                del root
+                del subdir
                 for filename in files:
                     config_files.append('/etc/sensu/conf.d/' + filename)
 
@@ -28,11 +30,13 @@ class SensuUtils(object):
             jobj = json.load(j_dat)
             j_dat.close()
             return jobj
-        except:
+        except ValueError:
+            return {}
+        except IOError:
             return {}
 
     @staticmethod
-    @memoize
+    @ConfCache
     def settings():
         settings_hash = {}
         for filename in SensuUtils.config_files():
@@ -44,13 +48,15 @@ class SensuUtils(object):
         event = {}
         try:
             event = json.loads(json_data)
-            if 'occurrences' not in event or not event['occurrences']:
-                event['occurrences'] = 1
+        except ValueError:
+            print "Error loading json"
+            return {}
 
-            for item in 'check', 'client':
-                if item not in event or not event[item]:
-                    event[item] = {}
-        except Exception as err:
-            print "Error reading event: " + err.message
+        if 'occurrences' not in event or not event['occurrences']:
+            event['occurrences'] = 1
+
+        for item in 'check', 'client':
+            if item not in event or not event[item]:
+                event[item] = {}
 
         return event

@@ -1,7 +1,7 @@
 import functools
 
 
-class memoize(object):
+class ConfCache(object):
     def __init__(self, func):
         self.func = func
         self.cache = {}
@@ -29,7 +29,7 @@ class memoize(object):
         fnction = functools.partial(self.__call__, obj)
         try:
             self.cache = obj.cache
-        except:
+        except AttributeError:
             obj.cache = {}
             self.cache = obj.cache
         return fnction
