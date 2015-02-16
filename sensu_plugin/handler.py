@@ -20,7 +20,9 @@ class SensuHandler(object):
         self.filter_silenced()
 
     def bail(self, msg):
-        print(str(msg) + ": " + self.event['client']['name'] + "/" + self.event['check']['name'])
+        client_name = self.event['client']['name']
+        check_name = self.event['check']['name']
+        print str(msg)+ ": "+client_name+"/"+check_name
         sys.exit(0)
 
     def filter_disabled(self):
@@ -28,32 +30,37 @@ class SensuHandler(object):
             self.bail("Alert Disabled")
 
     def filter_repeated(self):
-        occurrences = self.event['check'].get('occurrences', 1)
+        ocr = self.event['check'].get('occurrences', 1)
         interval = self.event['check'].get('interval', 30)
         refresh = self.event['check'].get('refresh', 1800)
 
-        if self.event['occurrences'] < occurrences:
+        if self.event['occurrences'] < ocr:
             self.bail("Not enough occurrences")
 
-        if self.event['occurrences'] > occurrences and self.event['action'] == 'create':
+        if self.event['occurrences'] > ocr and self.event['action'] == 'create':
             num = int(refresh / interval)
             if not (num == 0 or self.event['occurrences'] % num == 0):
                 self.bail("Only handling every " + str(num) + " occurrences")
 
     def stash_exists(self, path):
-        req = requests.get("http://" + self.settings['api']['host'] + ":" + self.settings['api']['port'] + path)
+        api_host = self.settings['api']['host']
+        api_port = self.settings['api']['port']
+        req = requests.get(
+            "http://"+api_host+":"+api_port+path)
         if req.status_code == 200:
             return True
         return False
-    
+
     def filter_silenced(self):
+        client_name = self.event['client']['name']
+        check_name = self.event['check']['name']
         stashes = [
-            ['client', '/silence/' + self.event['client']['name']],
-            ['check', '/silence/' + self.event['client']['name'] + '/' + self.event['check']['name']],
-            ['check', '/silence/all/' + self.event['check']['name']]
+            ['client', '/silence/' + client_name],
+            ['check', '/silence/' + client_name + '/' + check_name],
+            ['check', '/silence/all/' + check_name]
         ]
 
         for scope, path in stashes:
             if self.stash_exists(path):
                 self.bail(scope + " alerts silenced")
-                
+
