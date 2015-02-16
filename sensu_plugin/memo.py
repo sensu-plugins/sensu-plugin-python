@@ -1,14 +1,13 @@
 import functools
 
+
 class memoize(object):
     def __init__(self, func):
-        #print "Init"
         self.func = func
         self.cache = {}
 
     def __call__(self, *args):
-        #print "Call"
-        if not self.func in self.cache:
+        if self.func not in self.cache:
             self.cache[self.func] = {}
         try:
             return self.cache[self.func][args]
@@ -27,12 +26,10 @@ class memoize(object):
 
     def __get__(self, obj, objtype):
         """Support instance methods."""
-        #print "Get", obj, objtype
         fnction = functools.partial(self.__call__, obj)
         try:
             self.cache = obj.cache
         except:
             obj.cache = {}
             self.cache = obj.cache
-        #print self.cache
         return fnction

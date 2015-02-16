@@ -1,8 +1,10 @@
 #!/usr/bin/env python
-#coding=utf-8
+# coding=utf-8
 
-import sys, requests
+import sys
+import requests
 from sensu_plugin.utils import SensuUtils
+
 
 class SensuHandler(object):
     def __init__(self):
@@ -22,14 +24,15 @@ class SensuHandler(object):
     def bail(self, msg):
         client_name = self.event['client']['name']
         check_name = self.event['check']['name']
-        print str(msg)+ ": "+client_name+"/"+check_name
+        print str(msg) + ": " + client_name + "/" + check_name
         sys.exit(0)
 
     def filter_disabled(self):
-        if self.event['check'].get('alert', True) == False:
+        if self.event['check'].get('alert', True) is False:
             self.bail("Alert Disabled")
 
     def filter_repeated(self):
+        event_occurrences = self.event['occurrences']
         ocr = self.event['check'].get('occurrences', 1)
         interval = self.event['check'].get('interval', 30)
         refresh = self.event['check'].get('refresh', 1800)
@@ -37,7 +40,7 @@ class SensuHandler(object):
         if self.event['occurrences'] < ocr:
             self.bail("Not enough occurrences")
 
-        if self.event['occurrences'] > ocr and self.event['action'] == 'create':
+        if event_occurrences > ocr and self.event['action'] == 'create':
             num = int(refresh / interval)
             if not (num == 0 or self.event['occurrences'] % num == 0):
                 self.bail("Only handling every " + str(num) + " occurrences")
@@ -63,4 +66,3 @@ class SensuHandler(object):
         for scope, path in stashes:
             if self.stash_exists(path):
                 self.bail(scope + " alerts silenced")
-

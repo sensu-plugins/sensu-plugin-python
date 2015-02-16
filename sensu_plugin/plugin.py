@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding=utf-8
+# coding=utf-8
 
 from __future__ import print_function
 import atexit
@@ -66,6 +66,6 @@ class SensuPlugin(object):
             os._exit(1)
         elif self._hook.exception:
             print("Check failed to run: %s, %s" %
-                 (sys.last_type, traceback.format_tb(sys.last_traceback)))
+                  (sys.last_type, traceback.format_tb(sys.last_traceback)))
             sys.stdout.flush()
             os._exit(2)

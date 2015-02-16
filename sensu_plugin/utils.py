@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+# coding=utf-8
 
 import os
 import json
 from sensu_plugin.memo import memoize
+
 
 class SensuUtils(object):
 
@@ -18,7 +20,6 @@ class SensuUtils(object):
                     config_files.append('/etc/sensu/conf.d/' + filename)
 
         return config_files
-
 
     @staticmethod
     def load_config(filename):
@@ -43,18 +44,13 @@ class SensuUtils(object):
         event = {}
         try:
             event = json.loads(json_data)
-            if not 'occurrences' in event or not event['occurrences']:
+            if 'occurrences' not in event or not event['occurrences']:
                 event['occurrences'] = 1
 
             for item in 'check', 'client':
-                if not item in event or not event[item]:
+                if item not in event or not event[item]:
                     event[item] = {}
         except Exception as err:
             print "Error reading event: " + err.message
 
         return event
-
-
-
-
-
