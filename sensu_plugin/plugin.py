@@ -1,11 +1,5 @@
 #!/usr/bin/env python
-#coding=utf-8
-
-#
-# Copyright (C) 2014 - S. Zachariah Sprackett <zac@sprackett.com>
-#
-# Released under the same terms as Sensu (the MIT license); see LICENSE
-# for details.
+# coding=utf-8
 
 from __future__ import print_function
 import atexit
@@ -15,6 +9,7 @@ import os
 import traceback
 from collections import namedtuple
 from sensu_plugin.exithook import ExitHook
+from sensu_plugin.utils import SensuUtils
 
 ExitCode = namedtuple('ExitCode', ['OK', 'WARNING', 'CRITICAL', 'UNKNOWN'])
 
@@ -39,6 +34,8 @@ class SensuPlugin(object):
         if hasattr(self, 'setup'):
             self.setup()
         (self.options, self.remain) = self.parser.parse_known_args()
+
+        self.settings = SensuUtils.settings()
 
         self.run()
 
@@ -69,6 +66,6 @@ class SensuPlugin(object):
             os._exit(1)
         elif self._hook.exception:
             print("Check failed to run: %s, %s" %
-                 (sys.last_type, traceback.format_tb(sys.last_traceback)))
+                  (sys.last_type, traceback.format_tb(sys.last_traceback)))
             sys.stdout.flush()
             os._exit(2)

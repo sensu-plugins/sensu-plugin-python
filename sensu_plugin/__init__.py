@@ -5,3 +5,4 @@ from sensu_plugin.metric import SensuPluginMetricJSON
 from sensu_plugin.metric import SensuPluginMetricGraphite
 from sensu_plugin.metric import SensuPluginMetricStatsd
 from sensu_plugin.handler import SensuHandler
+from sensu_plugin.utils import SensuUtils

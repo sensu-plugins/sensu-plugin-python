@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding=utf-8
+# coding=utf-8
 
 #
 # Copyright (C) 2014 - S. Zachariah Sprackett <zac@sprackett.com>
@@ -29,8 +29,8 @@ class SensuPluginCheck(SensuPlugin):
         if m is None or (m[0] is None and len(m) == 1):
             m = self.plugin_info['message']
 
-        if not m is None and not (m[0] is None and len(m) == 1):
+        if m is not None and not (m[0] is None and len(m) == 1):
             msg = ": {}".format(' '.join(str(message) for message in m))
 
-        print("{} {}{}".format(self.check_name(),
-              self.plugin_info['status'], msg))
+        check_name = self.check_name()
+        print("{} {}{}".format(check_name, self.plugin_info['status'], msg))
