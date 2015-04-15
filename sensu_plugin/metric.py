@@ -10,14 +10,15 @@ from __future__ import print_function
 import json
 import time
 from sensu_plugin.plugin import SensuPlugin
+from sensu_plugin.compat import compat_basestring
 
 
 class SensuPluginMetricJSON(SensuPlugin):
     def output(self, m):
         obj = m[0]
-        if type(obj) is str or type(obj) is Exception:
+        if isinstance(obj, compat_basestring) or isinstance(obj, Exception):
             print(obj)
-        elif type(obj) is dict or type(obj) is list:
+        elif isinstance(obj, dict) or isinstance(obj, list):
             print(json.dumps(obj))
 
 
@@ -25,7 +26,7 @@ class SensuPluginMetricGraphite(SensuPlugin):
     def output(self, *m):
         if m[0] is None:
             print()
-        elif type(m[0]) is Exception or m[1] is None:
+        elif isinstance(m[0], Exception) or m[1] is None:
             print(m[0])
         else:
             l_args = list(m)
@@ -40,7 +41,7 @@ class SensuPluginMetricStatsd(SensuPlugin):
     def output(self, *m):
         if m[0] is None:
             print()
-        elif type(m[0]) is Exception or m[1] is None:
+        elif isinstance(m[0], Exception) or m[1] is None:
             print(m[0])
         else:
             l_args = list(m)
