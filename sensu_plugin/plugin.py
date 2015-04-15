@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-#coding=utf-8
-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2014 - S. Zachariah Sprackett <zac@sprackett.com>
 #
@@ -69,6 +68,6 @@ class SensuPlugin(object):
             os._exit(1)
         elif self._hook.exception:
             print("Check failed to run: %s, %s" %
-                 (sys.last_type, traceback.format_tb(sys.last_traceback)))
+                  (sys.last_type, traceback.format_tb(sys.last_traceback)))
             sys.stdout.flush()
             os._exit(2)
