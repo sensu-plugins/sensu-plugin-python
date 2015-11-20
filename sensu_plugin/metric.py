@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 #
 # Copyright (C) 2014 - S. Zachariah Sprackett <zac@sprackett.com>
 #
@@ -11,12 +10,13 @@ from __future__ import print_function
 import json
 import time
 from sensu_plugin.plugin import SensuPlugin
+from sensu_plugin.compat import compat_basestring
 
 
 class SensuPluginMetricJSON(SensuPlugin):
     def output(self, m):
         obj = m[0]
-        if isinstance(obj, str) or isinstance(obj, Exception):
+        if isinstance(obj, compat_basestring) or isinstance(obj, Exception):
             print(obj)
         elif isinstance(obj, dict) or isinstance(obj, list):
             print(json.dumps(obj))
