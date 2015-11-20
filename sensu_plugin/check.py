@@ -30,7 +30,7 @@ class SensuPluginCheck(SensuPlugin):
             m = self.plugin_info['message']
 
         if not m is None and not (m[0] is None and len(m) == 1):
-            msg = ": {}".format(' '.join(str(message) for message in m))
+            msg = ": {0}".format(' '.join(str(message) for message in m))
 
-        print("{} {}{}".format(self.check_name(),
+        print("{0} {1}{2}".format(self.check_name(),
               self.plugin_info['status'], msg))
