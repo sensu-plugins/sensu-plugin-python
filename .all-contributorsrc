@@ -1,0 +1,25 @@
+{
+  "projectName": "sensu-plugin-python",
+  "projectOwner": "sensu-plugins",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "barryorourke",
+      "name": "Barry O'Rourke",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/981742?v=4",
+      "profile": "http://www.orodor.org.uk",
+      "contributions": []
+    },
+    {
+      "login": "luisdavim",
+      "name": "Luis Davim",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/173006?v=4",
+      "profile": "http://sysadminnotebook.blogspot.pt/",
+      "contributions": []
+    }
+  ]
+}

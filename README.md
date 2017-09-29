@@ -93,8 +93,20 @@ this:
 
 ## License
 
-* Based heavily on [sensu-plugin](https://github.com/sensu/sensu-plugin) Copyright 2011 Decklin Foster
-* Python port Copyright 2014 S. Zachariah Sprackett
+Released under the [MIT license](LICENSE.txt), the same terms as Sensu.
 
-Released under the same terms as Sensu (the MIT license); see LICENSE
-for details
+## Contributors
+
+Thanks goes to these wonderful people maintaining the repo:
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+| [<img src="https://avatars3.githubusercontent.com/u/981742?v=4" width="100px;"/><br /><sub>Barry O'Rourke</sub>](http://www.orodor.org.uk)<br /> | [<img src="https://avatars3.githubusercontent.com/u/173006?v=4" width="100px;"/><br /><sub>Luis Davim</sub>](http://sysadminnotebook.blogspot.pt/)<br /> |
+| :---: | :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project will eventually follow the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
+
+## Props
+
+* Original author is S. Zachariah Sprackett :boom:
+* Based on [sensu-plugin](https://github.com/sensu/sensu-plugin), with thanks to Decklin Foster :bow:
