@@ -21,6 +21,7 @@ class SensuPluginMetricJSON(SensuPlugin):
         elif isinstance(obj, (dict, list)):
             print(json.dumps(obj))
 
+
 class SensuPluginMetricGraphite(SensuPlugin):
     def output(self, *args):
         if args[0] is None:
