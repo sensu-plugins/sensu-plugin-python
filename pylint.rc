@@ -35,7 +35,10 @@ load-plugins=
 # it should appear only once).
 #    R0201: *Method could be a function*
 #    C0111: *Missing doc string*
-disable=E1101,R0201,W0212,C0111
+#    R0903: *Too few public methods*
+#    E0602: *Locally disabling undefined-variable*
+#    R0204: *Redefinition of type from X to Y*
+disable=E1101,R0201,W0212,C0111,R0903,E0602,R0204
 
 
 
@@ -219,7 +222,7 @@ int-import-graph=
 [DESIGN]
 
 # Maximum number of arguments for function / method
-max-args=5
+max-args=6
 
 # Argument names that match this expression will be ignored. Default to name
 # with leading underscore

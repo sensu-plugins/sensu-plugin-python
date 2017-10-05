@@ -52,6 +52,24 @@ this:
     if __name__ == "__main__":
       f = MyCheck()
 
+## Remote (JIT) Checks
+
+To submit checks on behalf of another system, import push_event:
+
+    from sensu_plugin.pushevent import push_event
+
+Then use with:
+
+    push_event(source="a_remote_host", check_name="MyCheckName", exit_code=2, message="My check has failed")
+
+This will submit a check result (a failure) appearing to come from the remote host 'a_remote_host', for check 'MyCheckName'.
+
+The default assumption is that there is a local sensu client running on port 3030, but you can override this by passing in sensu_client_host and sensu_client_port parameters.
+
+The check submits the check in json format.  Arbitrary extra fields can be added, e.g.
+
+    push_event(source="a_remote_host", check_name="MyCheckName", exit_code=2, message="My check has failed", team="MyTeam")
+
 ## Metrics
 
 ### JSON
