@@ -14,22 +14,22 @@ from sensu_plugin.compat import compat_basestring
 
 
 class SensuPluginMetricJSON(SensuPlugin):
-    def output(self, m):
-        obj = m[0]
-        if isinstance(obj, compat_basestring) or isinstance(obj, Exception):
+    def output(self, args):
+        obj = args[0]
+        if isinstance(obj, (Exception, compat_basestring)):
             print(obj)
-        elif isinstance(obj, dict) or isinstance(obj, list):
+        elif isinstance(obj, (dict, list)):
             print(json.dumps(obj))
 
 
 class SensuPluginMetricGraphite(SensuPlugin):
-    def output(self, *m):
-        if m[0] is None:
+    def output(self, *args):
+        if args[0] is None:
             print()
         elif isinstance(m[0], Exception) or m[1] is None:
-            print(m[0])
+            print(args[0])
         else:
-            l_args = list(m)
+            l_args = list(args)
             if len(l_args) < 3:
                 l_args.append(None)
             if l_args[2] is None:
@@ -38,13 +38,13 @@ class SensuPluginMetricGraphite(SensuPlugin):
 
 
 class SensuPluginMetricStatsd(SensuPlugin):
-    def output(self, *m):
-        if m[0] is None:
+    def output(self, *args):
+        if args[0] is None:
             print()
-        elif isinstance(m[0], Exception) or m[1] is None:
-            print(m[0])
+        elif isinstance(args[0], Exception) or args[1] is None:
+            print(args[0])
         else:
-            l_args = list(m)
+            l_args = list(args)
             if len(l_args) < 3 or l_args[2] is None:
                 stype = 'kv'
             else:

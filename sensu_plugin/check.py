@@ -23,13 +23,13 @@ class SensuPluginCheck(SensuPlugin):
     def message(self, *m):
         self.plugin_info['message'] = m
 
-    def output(self, m):
+    def output(self, args):
         msg = ''
-        if m is None or (m[0] is None and len(m) == 1):
-            m = self.plugin_info['message']
+        if args is None or (args[0] is None and len(args) == 1):
+            args = self.plugin_info['message']
 
-        if m is not None and not (m[0] is None and len(m) == 1):
-            msg = ": {0}".format(' '.join(str(message) for message in m))
+        if args is not None and not (args[0] is None and len(args) == 1):
+            msg = ": {0}".format(' '.join(str(message) for message in args))
 
         print("{0} {1}{2}".format(self.check_name(),
                                   self.plugin_info['status'], msg))
