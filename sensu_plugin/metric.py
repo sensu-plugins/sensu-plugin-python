@@ -16,7 +16,7 @@ from sensu_plugin.compat import compat_basestring
 class SensuPluginMetricJSON(SensuPlugin):
     def output(self, args):
         obj = args[0]
-        if isinstance(obj, compat_basestring) or isinstance(obj, Exception):
+        if isinstance(obj, (Exception, compat_basestring)):
             print(obj)
         elif isinstance(obj, (dict, list)):
             print(json.dumps(obj))
