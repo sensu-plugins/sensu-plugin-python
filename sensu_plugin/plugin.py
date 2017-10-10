@@ -48,7 +48,7 @@ class SensuPlugin(object):
 
         def dynamic(*args):
             self.plugin_info['status'] = method
-            if args:
+            if not args:
                 args = None
             self.output(args)
             sys.exit(getattr(self.exit_code, method))
