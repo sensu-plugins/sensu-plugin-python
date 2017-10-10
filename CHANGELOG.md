@@ -3,6 +3,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
+## [0.3.2] 2017-10-10
+### Fixed
+- Variable name changes in the metrics classed missed during the initial 0.3.0 release (@barryorourke)
+
 ## [0.3.1] 2017-10-10
 ### Fixed
 - Really obvious logical error introduced whilst making 0.3.0 pass tests (@barryorourke)

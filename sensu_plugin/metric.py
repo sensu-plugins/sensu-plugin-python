@@ -26,7 +26,7 @@ class SensuPluginMetricGraphite(SensuPlugin):
     def output(self, *args):
         if args[0] is None:
             print()
-        elif isinstance(m[0], Exception) or m[1] is None:
+        elif isinstance(args[0], Exception) or args[1] is None:
             print(args[0])
         else:
             l_args = list(args)
