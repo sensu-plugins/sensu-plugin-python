@@ -52,6 +52,6 @@ docs/_build/
 MANIFEST
 
 
-
-
+# virtual environments
 venv
+virtualenv

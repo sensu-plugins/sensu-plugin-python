@@ -3,6 +3,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
+## Unreleased
+### Added
+- Add support for python 3.5, which is the default version in Debian 9. (@barryorourke)
+
 ## [0.3.2] 2017-10-10
 ### Fixed
 - Variable name changes in the metrics classed missed during the initial 0.3.0 release (@barryorourke)
