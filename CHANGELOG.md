@@ -3,6 +3,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
+## [Unreleased]
+### Added
+- Add support for python 3.5, which is the default version in Debian 9. (@barryorourke)
+
 ## [0.3.2] 2017-10-10
 ### Fixed
 - Variable name changes in the metrics classed missed during the initial 0.3.0 release (@barryorourke)
@@ -28,3 +32,10 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 
 ## [0.1.0] 2014-01-06
 - Initial release (@zsprackett)
+
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/8920afcda62b34e9134ba9a816582dbf5f52806c...HEAD
+[0.3.2]: https://github.com/sensu-plugins/sensu-plugin-python/compare/40314082947208acf9ed7c6d6c321ea52a14e765...8920afcda62b34e9134ba9a816582dbf5f52806c
+[0.3.1]: https://github.com/sensu-plugins/sensu-plugin-python/compare/2deaf3a34cd86afe13af9ab34aefd8056d284e85...40314082947208acf9ed7c6d6c321ea52a14e765
+[0.3.0]: https://github.com/sensu-plugins/sensu-plugin-python/compare/1302599c366ce30e04119bbc7551a258b33a7eab...2deaf3a34cd86afe13af9ab34aefd8056d284e85
+[0.2.0]: https://github.com/sensu-plugins/sensu-plugin-python/compare/7f3a6311771469ef1a38719a9dfb407f1ff43cf8...1302599c366ce30e04119bbc7551a258b33a7eab
+[0.1.0]: https://github.com/sensu-plugins/sensu-plugin-python/commit/7f3a6311771469ef1a38719a9dfb407f1ff43cf8
