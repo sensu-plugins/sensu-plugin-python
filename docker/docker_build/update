@@ -1,0 +1,6 @@
+#!/bin/bash
+
+versions="2.7 3.4 3.5 3.6"
+
+echo $versions | xargs -n 1 cp ./setup.sh 2> /dev/null
+echo $versions | xargs -n 1 cp ./entrypoint.sh 2> /dev/null
