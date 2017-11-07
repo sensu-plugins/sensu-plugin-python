@@ -6,6 +6,7 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 ## [Unreleased]
 ### Added
 - Add support for python 3.5, which is the default version in Debian 9. (@barryorourke)
+- Added Dockerfiles and docker-compose.yml to aid with local development & testing (@absolutejam)
 
 ## [0.3.2] 2017-10-10
 ### Fixed
