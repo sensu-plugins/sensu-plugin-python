@@ -6,18 +6,27 @@
 # Released under the same terms as Sensu (the MIT license); see LICENSE
 # for details.
 
+'''
+This provides a base SensuHandler class that can be used for writing
+python-based Sensu handlers.
+'''
+
 from __future__ import print_function
 import os
 import sys
+import json
 import requests
 try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse
-from utils import *
+from sensu_plugin.utils import get_settings
 
 
 class SensuHandler(object):
+    '''
+    Class to be used as a basis for handlers.
+    '''
     def __init__(self):
         # Parse the stdin into a global event object
         stdin = sys.stdin.read()
@@ -40,8 +49,8 @@ class SensuHandler(object):
             self.event['occurrences'] = self.event.get('occurrences', 1)
             self.event['check'] = self.event.get('check', {})
             self.event['client'] = self.event.get('client', {})
-        except Exception as e:
-            print('error reading event: ' + e.message)
+        except Exception as exception:  # pylint: disable=broad-except
+            print('error reading event: ' + exception)
             sys.exit(1)
 
     def handle(self):
@@ -63,7 +72,7 @@ class SensuHandler(object):
             self.filter_silenced()
             self.filter_dependencies()
 
-            if self.deprecated_occurrence_filtering_enabled():
+            if self.deprecated_occurrence_filtering():
                 print('warning: occurrence filtering in sensu-plugin is' +
                       'deprecated, see http://bit.ly/sensu-plugin')
                 self.filter_repeated()
@@ -78,7 +87,7 @@ class SensuHandler(object):
         '''
         return self.event['check'].get('enable_deprecated_filtering', False)
 
-    def deprecated_occurrence_filtering_enabled(self):
+    def deprecated_occurrence_filtering(self):
         '''
         Evaluates whether the event should be processed by the
         filter_repeated method. Defaults to true, i.e. filter_repeated
@@ -94,23 +103,23 @@ class SensuHandler(object):
         '''
         Gracefully terminate with message
         '''
-        client_name = self.event['client'].get('name', 'error:no-client-name')
+        client_name = self.event.get('client', 'error:no-client-name')
         check_name = self.event['client'].get('name', 'error:no-check-name')
         print('{}: {}/{}'.format(msg, client_name, check_name))
         sys.exit(0)
 
     def get_api_settings(self):
         '''
-        Return a hash of API settings derived first from ENV['SENSU_API_URL']
+        Return a hash of API settings derived first from ENV['sensu_api_url']
         if set, then Sensu config `api` scope if configured, and finally
         falling back to to ipv4 localhost address on default API port.
 
         return dict
         '''
 
-        SENSU_API_URL = os.environ.get('SENSU_API_URL')
-        if SENSU_API_URL:
-            uri = urlparse(SENSU_API_URL)
+        sensu_api_url = os.environ.get('sensu_api_url')
+        if sensu_api_url:
+            uri = urlparse(sensu_api_url)
             self.api_settings = {
                 'host': '{0}//{1}'.format(uri.scheme, uri.hostname),
                 'port': uri.port,
@@ -125,7 +134,10 @@ class SensuHandler(object):
                 'port', 4567)
 
     # API requests
-    def api_request(method, path, blk):
+    def api_request(self, method, path):
+        '''
+        Query Sensu api for information.
+        '''
         if not hasattr(self, 'api_settings'):
             ValueError('api.json settings not found')
 
@@ -135,7 +147,6 @@ class SensuHandler(object):
             _request = requests.post
 
         domain = self.api_settings['host']
-        # TODO: http/https
         uri = 'http://{}:{}{}'.format(domain, self.api_settings['port'], path)
         if self.api_settings['user'] and self.api_settings['password']:
             auth = (self.api_settings['user'], self.api_settings['password'])
@@ -145,19 +156,32 @@ class SensuHandler(object):
         return req
 
     def stash_exists(self, path):
+        '''
+        Query Sensu API for stash data.
+        '''
         return self.api_request('get', '/stash' + path).status_code == 200
 
     def event_exists(self, client, check):
-        return self.api_request('get',
-                                '/events/{}/{}'.format(client, check)
-                               ).status_code == 200
+        '''
+        Query Sensu API for event.
+        '''
+        return self.api_request(
+            'get',
+            'events/{}/{}'.format(client, check)
+            ).status_code == 200
 
     # Filters
     def filter_disabled(self):
+        '''
+        Determine whether a check is disabled and shouldn't handle.
+        '''
         if self.event['check']['alert'] is False:
-            bail('alert disabled')
+            self.bail('alert disabled')
 
     def filter_silenced(self):
+        '''
+        Determine whether a check is silenced and shouldn't handle.
+        '''
         stashes = [
             ('client', '/silence/{}'.format(self.event['client']['name'])),
             ('check', '/silence/{}/{}'.format(
@@ -166,17 +190,18 @@ class SensuHandler(object):
             ('check', '/silence/all/{}'.format(self.event['check']['name']))
         ]
         for scope, path in stashes:
-            if stash_exists(path):
-                bail(scope + ' alerts silenced')
-            # TODO: Timeout for querying Sensu API?
-            #       More appropriate in the api_request method?
+            if self.stash_exists(path):
+                self.bail(scope + ' alerts silenced')
 
     def filter_dependencies(self):
+        '''
+        Determine whether a check has dependencies.
+        '''
         dependencies = self.event['check'].get('dependencies', None)
         if dependencies is None or not isinstance(dependencies, list):
             return
         for dependency in self.event['check']['dependencies']:
-            if len(str(dependency)) == 0:
+            if not str(dependency):
                 continue
             dependency_split = tuple(dependency.split('/'))
             # If there's a dependency on a check from another client, then use
@@ -187,9 +212,12 @@ class SensuHandler(object):
                 client = self.event['client']['name']
                 check = dependency_split[0]
             if self.event_exists(client, check):
-                bail('check dependency event exists')
+                self.bail('check dependency event exists')
 
     def filter_repeated(self):
+        '''
+        Determine whether a check is repeating.
+        '''
         defaults = {
             'occurrences': 1,
             'interval': 30,
@@ -198,8 +226,7 @@ class SensuHandler(object):
 
         # Override defaults with anything defined in the settings
         if isinstance(self.settings['sensu_plugin'], dict):
-            defaults.update(settings['sensu_plugin'])
-        end
+            defaults.update(self.settings['sensu_plugin'])
 
         occurrences = int(self.event['check'].get(
             'occurrences', defaults['occurrences']))
@@ -209,7 +236,7 @@ class SensuHandler(object):
             'refresh', defaults['refresh']))
 
         if self.event['occurrences'] < occurrences:
-            bail('not enough occurrences')
+            self.bail('not enough occurrences')
 
         if (self.event['occurrences'] > occurrences and
                 self.event['action'] == 'create'):
@@ -220,4 +247,4 @@ class SensuHandler(object):
                 (self.event['occurrences'] - occurrences) % number == 0):
             return
 
-        bail('only handling every ' + str(number) + ' occurrences')
+        self.bail('only handling every ' + str(number) + ' occurrences')

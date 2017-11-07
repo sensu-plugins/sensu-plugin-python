@@ -1,25 +1,34 @@
+'''
+Utilities for loading config files, etc.
+'''
+
 import os
 import json
 
 
 def config_files():
-    SENSU_LOADED_TEMPFILE = os.environ.get('SENSU_LOADED_TEMPFILE')
-    SENSU_CONFIG_FILES = os.environ.get('SENSU_CONFIG_FILES')
-    if SENSU_LOADED_TEMPFILE and os.path.isfile(SENSU_LOADED_TEMPLATE):
-        with open(SENSU_LOADED_TEMPLATE, 'r') as template:
-            contents = template.read()
+    '''
+    Get list of currently used config files.
+    '''
+    sensu_loaded_tempfile = os.environ.get('SENSU_LOADED_TEMPFILE')
+    sensu_config_files = os.environ.get('SENSU_CONFIG_FILES')
+    if sensu_loaded_tempfile and os.path.isfile(sensu_loaded_tempfile):
+        with open(sensu_loaded_tempfile, 'r') as tempfile:
+            contents = tempfile.read()
             return contents.split(':')
-    elif SENSU_CONFIG_FILES:
-        return SENSU_CONFIG_FILES.split(':')
+    elif sensu_config_files:
+        return sensu_config_files.split(':')
     else:
         files = ['/etc/sensu/config.json']
-        [files.append('/etc/sensu/conf.d/{}'.format(filename))
-         for filename in os.listdir('/etc/sensu/conf.d')
-         if os.path.splitext(filename)[1] == '.json']
-        return files
+        return [files.append('/etc/sensu/conf.d/{}'.format(filename))
+                for filename in os.listdir('/etc/sensu/conf.d')
+                if os.path.splitext(filename)[1] == '.json']
 
 
 def get_settings():
+    '''
+    Get all currently loaded settings.
+    '''
     settings = {}
     for config_file in config_files():
         config_contents = load_config(config_file)
@@ -29,19 +38,25 @@ def get_settings():
 
 
 def load_config(filename):
+    '''
+    Read contents of config file.
+    '''
     try:
         with open(filename, 'r') as config_file:
             return json.loads(config_file.read())
-    except FileNotFoundError:
-        {}
+    except IOError:
+        pass
 
 
 def deep_merge(dict_one, dict_two):
+    '''
+    Deep merge two dicts.
+    '''
     merged = dict_one.copy()
     for key, value in dict_two.items():
         # value is equivalent to dict_two[key]
         if (key in dict_one and
-            isinstance(dict_one[key], dict) and
+                isinstance(dict_one[key], dict) and
                 isinstance(value, dict)):
             merged[key] = deep_merge(dict_one[key], value)
         elif (key in dict_one and
