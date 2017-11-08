@@ -14,4 +14,4 @@ script:
     - ruby --version
     - pep8 sensu_plugin
     - pylint --rcfile=pylint.rc sensu_plugin
-    - nosetests --with-coverage --cover-package=sensu_plugin --cover-min-percentage=35 sensu_plugin/test/
+    - nosetests --with-coverage --cover-package=sensu_plugin --cover-min-percentage=25 sensu_plugin/test/

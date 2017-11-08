@@ -4,9 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 ## [Unreleased]
+
+## [0.4.0]
 ### Added
 - Add support for python 3.5, which is the default version in Debian 9. (@barryorourke)
 - Added Dockerfiles and docker-compose.yml to aid with local development & testing (@absolutejam)
+- Add handler support! (@absolutejam)
+- Temporarily drop test coverage percentage (@barryorourke)
 
 ## [0.3.2] 2017-10-10
 ### Fixed
