@@ -12,7 +12,7 @@ if [ $RC -ne 0 ]; then
   EXIT=1
 fi
 nosetests --with-coverage --cover-package=sensu_plugin \
-  --cover-min-percentage=35 sensu_plugin/test/
+  --cover-min-percentage=25 sensu_plugin/test/
 RC=$?
 if [ $RC -ne 0 ]; then
   EXIT=1
