@@ -35,6 +35,7 @@ class SensuHandler(object):
         # Prepare global settings
         self.settings = get_settings()
         self.api_settings = self.get_api_settings()
+        self.client_settings = self.get_client_settings()
 
         # Filter (deprecated) and handle
         self.filter()
@@ -156,6 +157,17 @@ class SensuHandler(object):
             auth = ()
         req = _request(uri, auth=auth)
         return req
+
+    def get_client_settings(self):
+        '''
+        Query sensu API for client settings.
+
+        return dict
+        '''
+        api_path = '/clients/{}'.format(self.event['client'])
+        resp = self.api_request('get', api_path)
+        return resp.json()
+
 
     def stash_exists(self, path):
         '''
