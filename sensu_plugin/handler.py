@@ -110,28 +110,30 @@ class SensuHandler(object):
 
     def get_api_settings(self):
         '''
-        Return a hash of API settings derived first from ENV['sensu_api_url']
+        Return a dict of API settings derived first from ENV['SENSU_API_URL']
         if set, then Sensu config `api` scope if configured, and finally
         falling back to to ipv4 localhost address on default API port.
 
         return dict
         '''
 
-        sensu_api_url = os.environ.get('sensu_api_url')
+        sensu_api_url = os.environ.get('SENSU_API_URL')
         if sensu_api_url:
             uri = urlparse(sensu_api_url)
-            self.api_settings = {
+            api_settings = {
                 'host': '{0}//{1}'.format(uri.scheme, uri.hostname),
                 'port': uri.port,
                 'user': uri.username,
                 'password': uri.password
             }
         else:
-            self.api_settings = self.settings.get('api', {})
-            self.api_settings['host'] = self.api_settings.get(
+            api_settings = self.settings.get('api', {})
+            api_settings['host'] = api_settings.get(
                 'host', '127.0.0.1')
-            self.api_settings['port'] = self.api_settings.get(
+            api_settings['port'] = api_settings.get(
                 'port', 4567)
+
+        return api_settings
 
     # API requests
     def api_request(self, method, path):
@@ -148,7 +150,7 @@ class SensuHandler(object):
 
         domain = self.api_settings['host']
         uri = 'http://{}:{}{}'.format(domain, self.api_settings['port'], path)
-        if self.api_settings['user'] and self.api_settings['password']:
+        if self.api_settings.get('user') and self.api_settings.get('password'):
             auth = (self.api_settings['user'], self.api_settings['password'])
         else:
             auth = ()
