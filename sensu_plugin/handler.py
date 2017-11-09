@@ -20,7 +20,7 @@ try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse
-from sensu_plugin.utils import get_settings
+from utils import get_settings
 
 
 class SensuHandler(object):
