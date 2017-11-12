@@ -27,30 +27,41 @@ class SensuHandler(object):
     '''
     Class to be used as a basis for handlers.
     '''
-    def __init__(self):
+    def ready(self):
         # Parse the stdin into a global event object
-        stdin = sys.stdin.read()
-        self.read_event(stdin)
+        stdin = self.read_stdin()
+        self.event = self.read_event(stdin)
 
         # Prepare global settings
         self.settings = get_settings()
+        return get_settings()
         self.api_settings = self.get_api_settings()
 
         # Filter (deprecated) and handle
         self.filter()
         self.handle()
 
+    def read_stdin(self):
+        '''
+        Read data piped from stdin
+        '''
+        try:
+            return sys.stdin.read()
+        except:
+            raise ValueError('Nothing read from stdin')
+
     def read_event(self, check_result):
         '''
         Convert the piped check result (json) into a global 'event' dict
         '''
         try:
-            self.event = json.loads(check_result)
-            self.event['occurrences'] = self.event.get('occurrences', 1)
-            self.event['check'] = self.event.get('check', {})
-            self.event['client'] = self.event.get('client', {})
+            event = json.loads(check_result)
+            event['occurrences'] = event.get('occurrences', 1)
+            event['check'] = event.get('check', {})
+            event['client'] = event.get('client', {})
+            return event
         except Exception as exception:  # pylint: disable=broad-except
-            print('error reading event: ' + exception)
+            print(check_result)
             sys.exit(1)
 
     def handle(self):
