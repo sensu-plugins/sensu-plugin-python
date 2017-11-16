@@ -103,8 +103,8 @@ class SensuHandler(object):
         '''
         Gracefully terminate with message
         '''
-        client_name = self.event.get('client', 'error:no-client-name')
-        check_name = self.event['client'].get('name', 'error:no-check-name')
+        client_name = self.event['client'].get('name', 'error:no-client-name')
+        check_name = self.event['check'].get('name', 'error:no-check-name')
         print('{}: {}/{}'.format(msg, client_name, check_name))
         sys.exit(0)
 
