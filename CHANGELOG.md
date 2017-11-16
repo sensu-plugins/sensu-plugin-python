@@ -3,7 +3,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
-## [Unreleased]
+# [Unreleased]
+
+# [0.4.2]
+##Fixed
 - Fixes `client_name` in `bail()` as it was using an incorrect path within `event` dict (@absolutejam)
 
 # [0.4.1]
@@ -47,7 +50,8 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 ## [0.1.0] 2014-01-06
 - Initial release (@zsprackett)
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.1...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.2...HEAD
+[0.4.1]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.1...0.4.2
 [0.4.1]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.0...0.4.1
 [0.4.0]: https://github.com/sensu-plugins/sensu-plugin-python/compare/8920afcda62b34e9134ba9a816582dbf5f52806c...0.4.0
 [0.3.2]: https://github.com/sensu-plugins/sensu-plugin-python/compare/40314082947208acf9ed7c6d6c321ea52a14e765...8920afcda62b34e9134ba9a816582dbf5f52806c
