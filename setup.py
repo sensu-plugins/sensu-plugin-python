@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='sensu_plugin',
-    version='0.4.3',
+    version='0.4.4',
     author='Sensu-Plugins and contributors',
     author_email='sensu-users@googlegroups.com',
     packages=['sensu_plugin', 'sensu_plugin.test'],

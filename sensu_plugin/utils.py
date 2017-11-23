@@ -21,7 +21,7 @@ def config_files():
     else:
         files = ['/etc/sensu/config.json']
         filenames = [f for f in os.listdir('/etc/sensu/conf.d')
-                     if os.path.splitext(f)[1] == 'json']
+                     if os.path.splitext(f)[1] == '.json']
         for filename in filenames:
             files.append('/etc/sensu/conf.d/{}'.format(filename))
         return files
