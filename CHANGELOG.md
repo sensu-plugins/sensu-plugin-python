@@ -6,6 +6,7 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 # [Unreleased]
 
 # [0.4.4]
+## Fixed
 - Fixes a bug introduced to `utils.config_files` which only returns `/etc/sensu/config.json` (@barryorourke)
 
 # [0.4.3]
