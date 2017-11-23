@@ -20,9 +20,11 @@ def config_files():
         return sensu_config_files.split(':')
     else:
         files = ['/etc/sensu/config.json']
-        return [files.append('/etc/sensu/conf.d/{}'.format(filename))
-                for filename in os.listdir('/etc/sensu/conf.d')
-                if os.path.splitext(filename)[1] == '.json']
+        filenames = [f for f in os.listdir('/etc/sensu/conf.d')
+                     if os.path.splitext(f)[1] == 'json']
+        for filename in filenames:
+            files.append('/etc/sensu/conf.d/{}'.format(filename))
+        return files
 
 
 def get_settings():
