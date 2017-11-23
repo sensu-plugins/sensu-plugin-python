@@ -5,6 +5,10 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 
 # [Unreleased]
 
+# [0.4.4]
+## Fixed
+- Fixes a bug introduced to `utils.config_files` which only returns `/etc/sensu/config.json` (@barryorourke)
+
 # [0.4.3]
 ## Fixed
 - Fixes `utils.config_files` so that it returns a list of files, rather than a list of `None`'s (@barryorourke)
@@ -54,7 +58,8 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 ## [0.1.0] 2014-01-06
 - Initial release (@zsprackett)
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.3...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.4...HEAD
+[0.4.3]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.3...0.4.4
 [0.4.2]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.2...0.4.3
 [0.4.1]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.1...0.4.2
 [0.4.1]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.0...0.4.1
