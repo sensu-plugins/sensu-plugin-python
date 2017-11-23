@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 # [Unreleased]
+
+# [0.4.3]
 ## Fixed
 - Fixes `utils.config_files` so that it returns a list of files, rather than a list of `None`'s (@barryorourke)
 
@@ -52,7 +54,8 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 ## [0.1.0] 2014-01-06
 - Initial release (@zsprackett)
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.2...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.3...HEAD
+[0.4.2]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.2...0.4.3
 [0.4.1]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.1...0.4.2
 [0.4.1]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.0...0.4.1
 [0.4.0]: https://github.com/sensu-plugins/sensu-plugin-python/compare/8920afcda62b34e9134ba9a816582dbf5f52806c...0.4.0
