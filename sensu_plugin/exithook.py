@@ -10,6 +10,9 @@ import sys
 
 
 class ExitHook(object):
+    '''
+    Takes the exit code of the script that registered the exit hook
+    '''
     def __init__(self):
         self._orig_exit = None
         self.exit_code = None

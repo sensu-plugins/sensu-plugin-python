@@ -12,6 +12,9 @@ from sensu_plugin.plugin import SensuPlugin
 
 class SensuPluginCheck(SensuPlugin):
     def check_name(self, name=None):
+        '''
+        Return check name if defined, otherwise use the class name
+        '''
         if name:
             self.plugin_info['check_name'] = name
 
@@ -21,9 +24,16 @@ class SensuPluginCheck(SensuPlugin):
         return self.__class__.__name__
 
     def message(self, *m):
+        '''
+        Define the check message
+        '''
         self.plugin_info['message'] = m
 
     def output(self, args):
+        '''
+        Print the final output message, eg.
+        CheckDisk CRTITICAL: message goes here
+        '''
         msg = ''
         if args is None or (args[0] is None and len(args) == 1):
             args = self.plugin_info['message']
