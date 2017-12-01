@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-settings = '''
+def example_settings():
+    settings = '''
 {
   "redis": {
     "reconnect_on_error": false,
@@ -22,9 +23,11 @@ settings = '''
 }
 '''
 
+    return settings
 
-check_results = [
-'''
+
+def example_check_result():
+    check_result = '''
 {
   "id": "ef6b87d2-1f89-439f-8bea-33881436ab90",
   "action": "create",
@@ -60,4 +63,5 @@ check_results = [
   }
 }
 '''
-]
+
+    return check_result

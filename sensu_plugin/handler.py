@@ -14,27 +14,24 @@ python-based Sensu handlers.
 from __future__ import print_function
 import os
 import sys
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../')
 import json
 import requests
 try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse
-from sensu_plugin.utils import get_settings
+from sensu_plugin.utils import get_settings, recurse_dict
 
 
 class SensuHandler(object):
     '''
-    Class to be used as a basis for handlers.
+    Class to be used as a basis for handlers
     '''
-    def ready(self):
-        # Parse the stdin into a global event object
+    def run(self):
         stdin = self.read_stdin()
         self.event = self.read_event(stdin)
-
-        # Prepare global settings
         self.settings = get_settings()
-        return get_settings()
         self.api_settings = self.get_api_settings()
 
         # Filter (deprecated) and handle
@@ -61,14 +58,40 @@ class SensuHandler(object):
             event['client'] = event.get('client', {})
             return event
         except Exception as exception:  # pylint: disable=broad-except
-            print(check_result)
-            sys.exit(1)
+            raise ValueError('error reading event: ' + check_result)
 
     def handle(self):
         '''
         Method that should be overwritten to provide handler logic.
         '''
-        print('ignoring event -- no handler defined')
+        return 'ignoring event -- no handler defined'
+
+    def get_config(self, config_name):
+        '''
+        Look for configuration data in check definition, client config and
+        server config, stopping at first match. Utilises the recurse_config
+        function to allow for dot-separated config_name.
+
+        This allows for more granular configuration, with lower-scoped settings (check definition) overwriting larger-scoped settings (server config).
+        '''
+
+        config_locations = [
+            self.event['check'], # check def
+            self.event['client'], # client config
+            self.settings, # server config
+        ]
+
+        for config_location in config_locations:
+            settings_exist = recurse_dict(config_location,
+                                          config_name,
+                                          raise_exception=False)
+            if settings_exist:
+                return settings_exist
+
+        if not settings_exist:
+            raise ValueError("could not find config entry '{}'".format(config_name))
+
+
 
     def filter(self):
         '''
@@ -178,10 +201,10 @@ class SensuHandler(object):
         '''
         Query Sensu API for event.
         '''
-        return self.api_request(
-            'get',
-            'events/{}/{}'.format(client, check)
-            ).status_code == 200
+        return (self.api_request(
+                    'get',
+                    'events/{}/{}'.format(client, check))
+                .status_code == 200)
 
     # Filters
     def filter_disabled(self):
