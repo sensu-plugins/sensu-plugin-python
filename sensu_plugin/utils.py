@@ -66,3 +66,34 @@ def deep_merge(dict_one, dict_two):
         else:
             merged[key] = value
     return merged
+
+
+def recurse_dict(data, path, raise_exception=True, first=True):
+    '''
+    Get a value from within a nested dict, using a dot-separated string as
+    the path, eg. 'myconfig.settings.foo' is equivalent to
+    { 'myconfig': { 'settings': { 'foo': 'bar' } } } and would return 'bar'.
+    '''
+
+    # TODO: This feels dirty
+    if first == True:
+        path = path.split('.')
+        path.reverse()
+
+    # Take the top-most level
+    current_level = path.pop()
+    next_level = data.get(current_level)
+
+    if not next_level:
+        if raise_exception:
+            error_msg = "could not find key '{}'".format(current_level)
+            raise ValueError(error_msg)
+        else:
+            return None
+
+    if len(path) > 1:
+        ret = recurse_dict(next_level, path, first=False)
+        return ret
+    # Get the last remaining tem
+    elif len(path) == 1:
+        return next_level.get(path[0])
