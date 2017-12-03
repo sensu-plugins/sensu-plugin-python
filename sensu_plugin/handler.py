@@ -21,7 +21,7 @@ try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse
-from sensu_plugin.utils import get_settings, recurse_dict
+from sensu_plugin.utils import get_settings
 
 
 class SensuHandler(object):
@@ -65,33 +65,6 @@ class SensuHandler(object):
         Method that should be overwritten to provide handler logic.
         '''
         return 'ignoring event -- no handler defined'
-
-    def get_config(self, config_name):
-        '''
-        Look for configuration data in check definition, client config and
-        server config, stopping at first match. Utilises the recurse_config
-        function to allow for dot-separated config_name.
-
-        This allows for more granular configuration, with lower-scoped settings (check definition) overwriting larger-scoped settings (server config).
-        '''
-
-        config_locations = [
-            self.event['check'], # check def
-            self.event['client'], # client config
-            self.settings, # server config
-        ]
-
-        for config_location in config_locations:
-            settings_exist = recurse_dict(config_location,
-                                          config_name,
-                                          raise_exception=False)
-            if settings_exist:
-                return settings_exist
-
-        if not settings_exist:
-            raise ValueError("could not find config entry '{}'".format(config_name))
-
-
 
     def filter(self):
         '''

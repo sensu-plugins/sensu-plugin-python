@@ -12,7 +12,7 @@ import json
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../../')
 from sensu_plugin.handler import SensuHandler
 from sensu_plugin.utils import get_settings
-from example_configs import example_settings, example_check_result
+from .example_configs import example_settings, example_check_result
 
 # Currently just a single example check result
 check_result = example_check_result()
@@ -34,26 +34,6 @@ class TestSensuHandler(unittest.TestCase):
 
     def tearDown(self):
         pass
-
-    def test_get_config(self):
-        '''
-        Tests the get_config method
-        '''
-
-        # Set up the properties that would be fed from stdin
-        self.SensuHandlerTest.event = {}
-        self.SensuHandlerTest.event['check'] = check_result_dict['check']
-        self.SensuHandlerTest.event['client'] = check_result_dict['client']
-        self.SensuHandlerTest.settings = settings_dict
-
-        # check def
-        # { 'check': { 'type': 'standard' } }
-        self.assertEqual('standard',
-                         self.SensuHandlerTest.get_config('type'))
-        # client def
-
-        # server def
-
 
     def test_handle(self):
         exit_test = 'ignoring event -- no handler defined'
@@ -142,10 +122,10 @@ class TestSensuHandler(unittest.TestCase):
             }
         }
         self.assertTrue(
-                self.SensuHandlerTest.deprecated_occurrence_filtering())
+            self.SensuHandlerTest.deprecated_occurrence_filtering())
 
         self.SensuHandlerTest.event = {
-            'check': { }
+            'check': {}
         }
         self.assertFalse(
             self.SensuHandlerTest.deprecated_occurrence_filtering()
