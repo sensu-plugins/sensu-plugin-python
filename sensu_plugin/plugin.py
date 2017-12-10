@@ -19,6 +19,12 @@ ExitCode = namedtuple('ExitCode', ['OK', 'WARNING', 'CRITICAL', 'UNKNOWN'])
 
 
 class SensuPlugin(object):
+    '''
+    Class to be inherited for Sensu plugins
+    '''
+
+    autorun = True
+
     def __init__(self):
         self.plugin_info = {
             'check_name': None,
@@ -39,7 +45,8 @@ class SensuPlugin(object):
             self.setup()
         (self.options, self.remain) = self.parser.parse_known_args()
 
-        self.run()
+        if self.autorun:
+            self.run()
 
     def output(self, args):
         print("SensuPlugin: %s" % ' '.join(str(a) for a in args))
