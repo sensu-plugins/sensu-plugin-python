@@ -14,7 +14,6 @@ python-based Sensu handlers.
 from __future__ import print_function
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../')
 import json
 import requests
 try:
@@ -26,11 +25,21 @@ from sensu_plugin.utils import get_settings
 
 class SensuHandler(object):
     '''
-    Class to be used as a basis for handlers
+    Class to be inherited for Sensu handlers
     '''
+
+    autorun = True
+
+    def __init__(self):
+        if self.autorun:
+            self.run()
+
     def run(self):
+        # Parse the stdin into a global event object
         stdin = self.read_stdin()
-        self.event = self.read_event(stdin)
+        self.read_event(stdin)
+
+        # Prepare global settings
         self.settings = get_settings()
         self.api_settings = self.get_api_settings()
 
@@ -128,7 +137,7 @@ class SensuHandler(object):
         if sensu_api_url:
             uri = urlparse(sensu_api_url)
             api_settings = {
-                'host': '{0}//{1}'.format(uri.scheme, uri.hostname),
+                'host': '{0}://{1}'.format(uri.scheme, uri.hostname),
                 'port': uri.port,
                 'user': uri.username,
                 'password': uri.password
@@ -156,7 +165,7 @@ class SensuHandler(object):
             _request = requests.post
 
         domain = self.api_settings['host']
-        uri = 'http://{}:{}{}'.format(domain, self.api_settings['port'], path)
+        uri = '{}:{}/{}'.format(domain, self.api_settings['port'], path)
         if self.api_settings.get('user') and self.api_settings.get('password'):
             auth = (self.api_settings['user'], self.api_settings['password'])
         else:
