@@ -25,11 +25,18 @@ from sensu_plugin.utils import get_settings
 
 class SensuHandler(object):
     '''
-    Class to be used as a basis for handlers.
+    Class to be inherited for Sensu handlers
     '''
+
+    autorun = True
+
     def __init__(self):
+        if self.autorun:
+            self.run()
+
+    def run(self):
         # Parse the stdin into a global event object
-        stdin = sys.stdin.read()
+        stdin = self.read_stdin()
         self.read_event(stdin)
 
         # Prepare global settings
@@ -40,24 +47,33 @@ class SensuHandler(object):
         self.filter()
         self.handle()
 
+    def read_stdin(self):
+        '''
+        Read data piped from stdin
+        '''
+        try:
+            return sys.stdin.read()
+        except:
+            raise ValueError('Nothing read from stdin')
+
     def read_event(self, check_result):
         '''
         Convert the piped check result (json) into a global 'event' dict
         '''
         try:
-            self.event = json.loads(check_result)
-            self.event['occurrences'] = self.event.get('occurrences', 1)
-            self.event['check'] = self.event.get('check', {})
-            self.event['client'] = self.event.get('client', {})
+            event = json.loads(check_result)
+            event['occurrences'] = event.get('occurrences', 1)
+            event['check'] = event.get('check', {})
+            event['client'] = event.get('client', {})
+            return event
         except Exception as exception:  # pylint: disable=broad-except
-            print('error reading event: ' + exception)
-            sys.exit(1)
+            raise ValueError('error reading event: ' + check_result)
 
     def handle(self):
         '''
         Method that should be overwritten to provide handler logic.
         '''
-        print('ignoring event -- no handler defined')
+        return 'ignoring event -- no handler defined'
 
     def filter(self):
         '''
@@ -121,7 +137,7 @@ class SensuHandler(object):
         if sensu_api_url:
             uri = urlparse(sensu_api_url)
             api_settings = {
-                'host': '{0}//{1}'.format(uri.scheme, uri.hostname),
+                'host': '{0}://{1}'.format(uri.scheme, uri.hostname),
                 'port': uri.port,
                 'user': uri.username,
                 'password': uri.password
@@ -149,7 +165,7 @@ class SensuHandler(object):
             _request = requests.post
 
         domain = self.api_settings['host']
-        uri = 'http://{}:{}{}'.format(domain, self.api_settings['port'], path)
+        uri = '{}:{}/{}'.format(domain, self.api_settings['port'], path)
         if self.api_settings.get('user') and self.api_settings.get('password'):
             auth = (self.api_settings['user'], self.api_settings['password'])
         else:
@@ -167,10 +183,10 @@ class SensuHandler(object):
         '''
         Query Sensu API for event.
         '''
-        return self.api_request(
-            'get',
-            'events/{}/{}'.format(client, check)
-            ).status_code == 200
+        return (self.api_request(
+                    'get',
+                    'events/{}/{}'.format(client, check))
+                .status_code == 200)
 
     # Filters
     def filter_disabled(self):
