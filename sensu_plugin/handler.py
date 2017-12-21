@@ -50,7 +50,7 @@ class SensuHandler(object):
             self.event['check'] = self.event.get('check', {})
             self.event['client'] = self.event.get('client', {})
         except Exception as exception:  # pylint: disable=broad-except
-            print('error reading event: ' + exception)
+            print('error reading event: ' + str(exception))
             sys.exit(1)
 
     def handle(self):
