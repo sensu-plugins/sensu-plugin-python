@@ -5,9 +5,13 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 
 # [Unreleased]
 
+# [0.4.6]
+## Fixed
+- @barryorourke messed up the release of 0.4.5, this fixes is (@barryorourke)
+
 # [0.4.5]
 ## Fixed
-- fix read event exception raise @oboukili
+- fix read event exception raise (@oboukili)
 
 # [0.4.4]
 ## Fixed
@@ -62,7 +66,8 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 ## [0.1.0] 2014-01-06
 - Initial release (@zsprackett)
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.5...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.6...HEAD
+[0.4.4]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.5...0.4.6
 [0.4.4]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.4...0.4.5
 [0.4.3]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.3...0.4.4
 [0.4.2]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.2...0.4.3
