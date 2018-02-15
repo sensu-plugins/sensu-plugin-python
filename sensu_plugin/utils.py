@@ -68,3 +68,47 @@ def deep_merge(dict_one, dict_two):
         else:
             merged[key] = value
     return merged
+
+
+def recurse_dict(data, path, first=True):
+    '''
+    Get a value from within a nested dict, using a dot-separated string as
+    the path, eg. 'myconfig.settings.foo' is equivalent to
+    { 'myconfig': { 'settings': { 'foo': 'bar' } } } and would return 'bar'.
+    '''
+
+    # TODO: This feels dirty
+    if first == True:
+        path = path.split('.')
+        path.reverse()
+
+    # Take the top-most level
+    current_level = path.pop()
+    next_level = data.get(current_level)
+
+    if not next_level:
+        error_msg = "could not find key '{}'".format(current_level)
+        raise ValueError(error_msg)
+
+    if len(path) > 1:
+        ret = recurse_dict(next_level, path, first=False)
+        return ret
+    # Get the last remaining tem
+    elif len(path) == 1:
+        return next_level.get(path[0])
+
+
+def get_config(path, *configs):
+    '''
+    Find a dict item using dot notation, falling back to the next dict in a
+    list if the item is not found. This leverages the recurse_dict function.
+    '''
+    found = None
+    for config in configs:
+        try:
+            found = recurse_dict(config, path)
+            break
+        except ValueError as ve:
+            continue
+
+    return found
