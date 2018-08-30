@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 # [Unreleased]
+
+# [0.4.7]
 ## Added
 - handlers can now process commandline arguments (@barryorourke)
 
@@ -64,7 +66,9 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 ## [0.1.0] 2014-01-06
 - Initial release (@zsprackett)
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.5...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.7...HEAD
+[0.4.7]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.6...0.4.7
+[0.4.5]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.5...0.4.6
 [0.4.4]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.4...0.4.5
 [0.4.3]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.3...0.4.4
 [0.4.2]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.2...0.4.3
