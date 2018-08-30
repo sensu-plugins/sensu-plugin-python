@@ -4,10 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 # [Unreleased]
+## Added
+- handlers can now process commandline arguments (@barryorourke)
 
 # [0.4.5]
 ## Fixed
-- fix read event exception raise @oboukili
+- fix read event exception raise (@oboukili)
 
 # [0.4.4]
 ## Fixed

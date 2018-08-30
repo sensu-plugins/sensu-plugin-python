@@ -12,6 +12,7 @@ python-based Sensu handlers.
 '''
 
 from __future__ import print_function
+import argparse
 import os
 import sys
 import json
@@ -35,6 +36,12 @@ class SensuHandler(object):
         # Prepare global settings
         self.settings = get_settings()
         self.api_settings = self.get_api_settings()
+
+        # Prepare command line arguments
+        self.parser = argparse.ArgumentParser()
+        if hasattr(self, 'setup'):
+            self.setup()
+        (self.options, self.remain) = self.parser.parse_known_args()
 
         # Filter (deprecated) and handle
         self.filter()
