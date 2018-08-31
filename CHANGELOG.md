@@ -7,6 +7,7 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 ## Changed
 - Remove unused tests (@barryorourke)
 - Refactor the run_tests script (@absolutejam)
+- Add support for Python 3.7 (@barryorourke)
 
 # [0.4.7]
 ## Added
