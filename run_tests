@@ -1,22 +1,58 @@
 #!/bin/sh
 
 EXIT=0
-pep8 sensu_plugin
-RC=$?
-if [ $RC -ne 0 ]; then
-  EXIT=1
-fi
-pylint --rcfile=pylint.rc sensu_plugin
-RC=$?
-if [ $RC -ne 0 ]; then
-  EXIT=1
-fi
-nosetests --with-coverage --cover-package=sensu_plugin \
-  --cover-min-percentage=25 sensu_plugin/test/
-RC=$?
-if [ $RC -ne 0 ]; then
-  EXIT=1
-fi
+
+rc() {
+  if [ "$?" -ne 0 ]; then
+    EXIT=1
+  fi
+}
+
+run_pycodestyle() {
+  echo '
+
+PYCODESTYLE -------------------------------------------------------------------'
+  pycodestyle sensu_plugin
+  rc
+}
+
+run_pylint() {
+  echo '
+
+PYLINT ------------------------------------------------------------------------'
+  pylint --rcfile=pylint.rc sensu_plugin
+  rc
+}
+
+run_nosetests() {
+  echo '
+
+NOSETESTS ---------------------------------------------------------------------'
+
+  nosetests --with-coverage --cover-package=sensu_plugin \
+            --cover-min-percentage=25 --cover-tests --cover-erase \
+            --cover-html --cover-html-dir=./report -w sensu_plugin/test \
+            --exe
+  # --exe means to run all executable tests
+  rc
+}
+
+case $1 in
+  pycodestyle|style)
+    run_pycodestyle
+    ;;
+  pylint|lint)
+    run_pylint
+    ;;
+  nose|nosetests)
+    run_nosetests
+    ;;
+  *)
+    run_pycodestyle
+    run_pylint
+    run_nosetests
+    ;;
+esac
 
 echo
 echo "Exiting with code $EXIT"

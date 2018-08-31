@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 # [Unreleased]
+## Changed
+- Remove unused tests (@barryorourke)
+- Refactor the run_tests script (@absolutejam)
+- Add support for Python 3.7 (@barryorourke)
 
 # [0.4.7]
 ## Added

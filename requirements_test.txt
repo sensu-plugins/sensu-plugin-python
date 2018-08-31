@@ -1,6 +1,6 @@
 argparse
 nose
-pep8
+pycodestyle
 pylint
 coverage
 requests

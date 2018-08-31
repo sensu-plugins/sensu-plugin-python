@@ -6,15 +6,19 @@ python:
   - '3.5'
   - '3.6'
 
+# magic to enable 3.7 without globally enabling sudo and dist: xenial for other build jobs
+matrix:
+  include:
+    - python: 3.7
+      dist: xenial
+      sudo: true
+
 install:
   - python setup.py install
   - pip install -r requirements_test.txt
 
 script:
-  - ruby --version
-  - pep8 sensu_plugin
-  - pylint --rcfile=pylint.rc sensu_plugin
-  - nosetests --with-coverage --cover-package=sensu_plugin --cover-min-percentage=25 sensu_plugin/test/
+  - ./run_tests
 
 deploy:
   provider: pypi
