@@ -11,10 +11,7 @@ install:
   - pip install -r requirements_test.txt
 
 script:
-  - ruby --version
-  - pep8 sensu_plugin
-  - pylint --rcfile=pylint.rc sensu_plugin
-  - nosetests --with-coverage --cover-package=sensu_plugin --cover-min-percentage=25 sensu_plugin/test/
+  - ./run_tests
 
 deploy:
   provider: pypi
