@@ -8,11 +8,11 @@ docker directory, run `docker-compose run --rm <version>`, where version is
 one of `2.7`,`3.4`,`3.5`,`3.6`. This will automatically build the docker 
 images from the `docker_build` directory and run the `run_tests` script against
 the `sensu_plugin` directory within the container, removing the container
-one exit.
+upon exit.
 
 For any additional prerequisites that are needed (eg. python modules),
-ammend `docker_build/setup.sh` and then run `docker_build/update` (This
-copies the ammended `setup.sh` into each image directory). Procede to rebuild
+amend `docker_build/setup.sh` and then run `docker_build/update` (This
+copies the amended `setup.sh` into each image directory). Proceed to rebuild
 the docker images, either via. 
 `docker build -t python:2.7.14-sensuci ./docker_build/2.7`
 or with `docker-compose build 2.7`.
