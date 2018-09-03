@@ -8,6 +8,8 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 - Remove unused tests (@barryorourke)
 - Refactor the run_tests script (@absolutejam)
 - Add support for Python 3.7 (@barryorourke)
+- Update docker to use refactored test suite (@barryorourke)
+- Add python 3.7 support to docker (@barryorourke)
 
 # [0.4.7]
 ## Added

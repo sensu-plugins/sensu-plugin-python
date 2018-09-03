@@ -7,7 +7,7 @@ services:
     hostname: "2.7"
     container_name: "sensuplugin_python2.7"
     volumes:
-      - "../sensu_plugin:/sensu_plugin/"
+      - "../:/sensu-plugin-python/"
       - "../run_tests:/entrypoint.sh:ro"
 
   "3.4":
@@ -16,8 +16,8 @@ services:
     hostname: "3.4"
     container_name: "sensuplugin_python3.4"
     volumes:
-      - "../sensu_plugin:/sensu_plugin"
-      - "../run_tests:/entrypoint.sh:ro"
+       - "../:/sensu-plugin-python/"
+       - "../run_tests:/entrypoint.sh:ro"
 
   "3.5":
     image: "python:3.5.4-sensuci"
@@ -25,8 +25,8 @@ services:
     hostname: "3.5"
     container_name: "sensuplugin_python3.5"
     volumes:
-      - "../sensu_plugin:/sensu_plugin"
-      - "../run_tests:/entrypoint.sh:ro"
+       - "../:/sensu-plugin-python/"
+       - "../run_tests:/entrypoint.sh:ro"
 
   "3.6":
     image: "python:3.6-sensuci"
@@ -34,5 +34,14 @@ services:
     hostname: "3.6"
     container_name: "sensuplugin_python3.6"
     volumes:
-      - "../sensu_plugin:/sensu_plugin"
-      - "../run_tests:/entrypoint.sh:ro"
+       - "../:/sensu-plugin-python/"
+       - "../run_tests:/entrypoint.sh:ro"
+
+  "3.7":
+    image: "python:3.7-sensuci"
+    build: "./docker_build/3.7"
+    hostname: "3.7"
+    container_name: "sensuplugin_python3.7"
+    volumes:
+       - "../:/sensu-plugin-python/"
+       - "../run_tests:/entrypoint.sh:ro"
