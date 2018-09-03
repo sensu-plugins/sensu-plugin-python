@@ -8,6 +8,8 @@ rc() {
   fi
 }
 
+[ -f /docker ] && cd sensu-plugin-python
+
 run_pycodestyle() {
   echo '
 
