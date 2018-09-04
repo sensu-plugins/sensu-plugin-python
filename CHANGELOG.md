@@ -10,6 +10,7 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 - Add support for Python 3.7 (@barryorourke)
 - Update docker to use refactored test suite (@barryorourke)
 - Add python 3.7 support to docker (@barryorourke)
+- rename test directory to tests, because OCD (@barryorourke)
 
 # [0.4.7]
 ## Added

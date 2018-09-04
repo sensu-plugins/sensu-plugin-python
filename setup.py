@@ -5,7 +5,7 @@ setup(
     version='0.4.7',
     author='Sensu-Plugins and Contributors',
     author_email='sensu-users@googlegroups.com',
-    packages=['sensu_plugin', 'sensu_plugin.test'],
+    packages=['sensu_plugin', 'sensu_plugin.tests'],
     scripts=[],
     url='https://github.com/sensu-plugins/sensu-plugin-python',
     license='LICENSE.txt',
