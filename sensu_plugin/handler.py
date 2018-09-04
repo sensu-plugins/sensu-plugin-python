@@ -26,11 +26,24 @@ from sensu_plugin.utils import get_settings
 
 class SensuHandler(object):
     '''
-    Class to be used as a basis for handlers.
+    Base class for Sensu Handlers.
     '''
+
+    autorun = True
+
     def __init__(self):
+
+        if autorun:
+            self.run()
+
+    def run(self):
+        '''
+        Set up the event object, global settings and command line
+        arguments.
+        '''
+
         # Parse the stdin into a global event object
-        stdin = sys.stdin.read()
+        stdin = self.read_stdin()
         self.read_event(stdin)
 
         # Prepare global settings
@@ -46,6 +59,15 @@ class SensuHandler(object):
         # Filter (deprecated) and handle
         self.filter()
         self.handle()
+
+    def read_stdin(self):
+        '''
+        Read data piped from stdin.
+        '''
+        try:
+            return sys.stdin.read()
+        except:
+            raise ValueError('Nothing read from stdin')
 
     def read_event(self, check_result):
         '''
