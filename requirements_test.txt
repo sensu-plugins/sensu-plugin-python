@@ -4,3 +4,5 @@ pycodestyle
 pylint
 coverage
 requests
+pytest
+mock

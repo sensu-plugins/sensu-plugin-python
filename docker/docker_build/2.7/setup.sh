@@ -7,7 +7,7 @@ apt-get update
 pip install requests
 
 # Testing requiremenets
-pip install pycodestyle pylint nose coverage
+pip install pycodestyle pylint nose coverage mock pytest
 
 # running in docker
 touch /docker

@@ -29,9 +29,7 @@ class SensuHandler(object):
     Base class for Sensu Handlers.
     '''
 
-    autorun = True
-
-    def __init__(self):
+    def __init__(self, autorun=True):
 
         if autorun:
             self.run()
@@ -66,7 +64,7 @@ class SensuHandler(object):
         '''
         try:
             return sys.stdin.read()
-        except:
+        except Exception:
             raise ValueError('Nothing read from stdin')
 
     def read_event(self, check_result):
@@ -74,19 +72,19 @@ class SensuHandler(object):
         Convert the piped check result (json) into a global 'event' dict
         '''
         try:
-            self.event = json.loads(check_result)
-            self.event['occurrences'] = self.event.get('occurrences', 1)
-            self.event['check'] = self.event.get('check', {})
-            self.event['client'] = self.event.get('client', {})
-        except Exception as exception:  # pylint: disable=broad-except
-            print('error reading event: ' + str(exception))
-            sys.exit(1)
+            event = json.loads(check_result)
+            event['occurrences'] = event.get('occurrences', 1)
+            event['check'] = event.get('check', {})
+            event['client'] = event.get('client', {})
+            return event
+        except Exception:
+            raise ValueError('error reading event: ' + check_result)
 
     def handle(self):
         '''
         Method that should be overwritten to provide handler logic.
         '''
-        print('ignoring event -- no handler defined')
+        return 'ignoring event -- no handler defined'
 
     def filter(self):
         '''
@@ -178,7 +176,7 @@ class SensuHandler(object):
             _request = requests.post
 
         domain = self.api_settings['host']
-        uri = 'http://{}:{}{}'.format(domain, self.api_settings['port'], path)
+        uri = '{}:{}/{}'.format(domain, self.api_settings['port'], path)
         if self.api_settings.get('user') and self.api_settings.get('password'):
             auth = (self.api_settings['user'], self.api_settings['password'])
         else:
