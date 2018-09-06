@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import json
 import os
-import sys
 
 try:
     from unittest.mock import Mock, patch
@@ -9,7 +8,6 @@ except ImportError:
     from mock import Mock, patch
 
 import pytest
-import nose
 
 # Alter path and import modules
 from sensu_plugin.handler import SensuHandler
@@ -21,14 +19,6 @@ CHECK_RESULT = example_check_result()
 CHECK_RESULT_DICT = json.loads(CHECK_RESULT)
 SETTINGS = example_settings()
 SETTINGS_DICT = json.loads(SETTINGS)
-
-
-def mock_read_stdin():
-    return CHECK_RESULT
-
-
-def mock_get_settings():
-    return SETTINGS_DICT
 
 
 def mock_api_settings():
@@ -45,13 +35,13 @@ class TestSensuHandler(object):
 
     def setup(self):
         '''
-        Instantiate a fresh SensuHandler before each test
+        Instantiate a fresh SensuHandler before each test.
         '''
         self.sensu_handler = SensuHandler(autorun=False)  # noqa
 
     def test_handle(self):
         '''
-        Tests the handle method
+        Tests the handle method.
         '''
 
         exit_msg = 'ignoring event -- no handler defined'
@@ -59,13 +49,16 @@ class TestSensuHandler(object):
 
     def test_read_stdin(self):
         '''
-        Tests the read_stdin method
+        Tests the read_stdin method.
         '''
+
         # Mock reading from stdin
         with patch('sensu_plugin.handler.sys.stdin') as mocked_stdin:
+
             # Test with value 'sensu'
             mocked_stdin.read = lambda: 'sensu'
             assert self.sensu_handler.read_stdin() == 'sensu'
+
             # Test with an example check value
             mocked_stdin.read = lambda: CHECK_RESULT
             assert self.sensu_handler.read_stdin() == CHECK_RESULT
@@ -73,38 +66,43 @@ class TestSensuHandler(object):
             with pytest.raises(ValueError):
                 self.sensu_handler.read_stdin()
 
-    @patch.object(SensuHandler, 'read_stdin', mock_read_stdin)
+    @patch.object(SensuHandler, 'read_stdin', CHECK_RESULT)
     def test_read_event(self):
         '''
-        Tests the read_event method
+        Tests the read_event method.
         '''
+
         read_event = self.sensu_handler.read_event
+
         # Test with dummy json
-        assert isinstance(read_event('{ "sensu": "rocks" }'),
-                          dict)
+        assert isinstance(read_event('{ "sensu": "rocks" }'), dict)
+
         # Test with example check
-        assert isinstance(read_event(CHECK_RESULT),
-                          dict)
+        assert isinstance(read_event(CHECK_RESULT), dict)
+
         # Ensure that the 'client' key is present
-        assert isinstance(read_event(CHECK_RESULT)['client'],
-                          dict)
+        assert isinstance(read_event(CHECK_RESULT)['client'], dict)
+
         # Ensure that the 'check' key is present
-        assert isinstance(read_event(CHECK_RESULT)['check'],
-                          dict)
+        assert isinstance(read_event(CHECK_RESULT)['check'], dict)
+
         # Test with a string (Fail)
         with pytest.raises(Exception):
             read_event('astring')
 
-    @patch.object(SensuHandler, 'read_stdin', mock_read_stdin)
+    @patch.object(SensuHandler, 'read_stdin', CHECK_RESULT)
     def test_filtering_enabled(self):  # noqa
         '''
-        Tests the deprecated_filtering_enabled method
+        Tests the deprecated_filtering_enabled method.
         '''
+
         # Return True if explicilt set to True
         self.sensu_handler.event = {
             'check': {'enable_deprecated_filtering': True}
         }
+
         assert self.sensu_handler.deprecated_filtering_enabled()
+
         # Return False if not set
         self.sensu_handler.event = {
             'check': {}
@@ -113,14 +111,16 @@ class TestSensuHandler(object):
 
     def test_occurrence_filtering(self):  # noqa
         '''
-        Tests the deprecated_occurrence_filtering method
+        Tests the deprecated_occurrence_filtering method.
         '''
+
         self.sensu_handler.event = {
             'check': {
                 'enable_deprecated_occurrence_filtering': True
             }
         }
         assert self.sensu_handler.deprecated_occurrence_filtering()
+
         self.sensu_handler.event = {
             'check': {}
         }
@@ -132,7 +132,7 @@ class TestSensuHandler(object):
     @patch.object(SensuHandler, 'filter_repeated', Mock())
     def test_filter(self):
         '''
-        Tests the filter method
+        Tests the filter method.
         '''
         self.sensu_handler.event = {'check': {}}
         dfe = 'sensu_plugin.handler.SensuHandler.deprecated_filtering_enabled'
@@ -150,8 +150,9 @@ class TestSensuHandler(object):
     @patch('sensu_plugin.handler.requests.get')
     def test_api_request(self, mock_get, mock_post):
         '''
-        Tests the api_request method
+        Tests the api_request method.
         '''
+
         # No api_settings defined
         with pytest.raises(AttributeError):
             self.sensu_handler.api_request('GET', 'foo')
@@ -177,22 +178,25 @@ class TestSensuHandler(object):
     @patch.dict(os.environ, {'SENSU_API_URL': "http://api:4567"})
     def test_get_api_settings(self):
         '''
-        Tests the get_api_settings method
+        Tests the get_api_settings method.
         '''
-        # Mock getting SENSU_API_URL environment var
+
         assert self.sensu_handler.get_api_settings() == mock_api_settings()
 
     @patch.object(SensuHandler, 'api_request')
     def test_stash_exists(self, mock_api_request):
         '''
-        Tests the stash_exists method
+        Tests the stash_exists method.
         '''
+
         class RequestsMock(object):
             def __init__(self, ret):
                 self.status_code = ret
+
         # Mock stash exists
         mock_api_request.return_value = RequestsMock(200)
         assert self.sensu_handler.stash_exists('stash')
+
         # Mock stash missing
         mock_api_request.return_value = RequestsMock(404)
         assert not self.sensu_handler.stash_exists('stash')
@@ -205,17 +209,6 @@ class TestSensuHandler(object):
     @patch.object(SensuHandler, 'handle', Mock())
     def test_run(self):
         '''
-        Tests the run method
+        Tests the run method.
         '''
         self.sensu_handler.run()
-
-
-if __name__ == '__main__':
-    # Run with nose directly
-    MODULE_NAME = sys.modules[__name__].__file__
-    RESULT = nose.run(argv=[sys.argv[0], MODULE_NAME, '-v', '--with-coverage',
-                            '--cover-min-percentage=25', '--cover-erase',
-                            '--cover-html', '--cover-html-dir',
-                            '{}/report'.format(
-                                os.path.dirname(os.path.realpath(__file__))),
-                            '--exe'])
