@@ -180,7 +180,6 @@ class TestSensuHandler(object):
         Tests the get_api_settings method
         '''
         # Mock getting SENSU_API_URL environment var
-        print(self.sensu_handler.get_api_settings())
         assert self.sensu_handler.get_api_settings() == mock_api_settings()
 
     @patch.object(SensuHandler, 'api_request')
