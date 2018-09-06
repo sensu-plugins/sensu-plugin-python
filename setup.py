@@ -20,6 +20,8 @@ setup(
         'pycodestyle',
         'pylint',
         'coverage',
-        'nose'
+        'nose',
+        'pytest',
+        'mock'
     ],
 )
