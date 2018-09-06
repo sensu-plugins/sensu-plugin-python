@@ -148,7 +148,7 @@ class SensuHandler(object):
         if sensu_api_url:
             uri = urlparse(sensu_api_url)
             api_settings = {
-                'host': '{0}//{1}'.format(uri.scheme, uri.hostname),
+                'host': '{0}://{1}'.format(uri.scheme, uri.hostname),
                 'port': uri.port,
                 'user': uri.username,
                 'password': uri.password

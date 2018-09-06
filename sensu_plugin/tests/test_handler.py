@@ -28,11 +28,11 @@ def mock_read_stdin():
 
 
 def mock_get_settings():
-    return settings_dict
+    return SETTINGS_DICT
 
 
 def mock_api_settings():
-    return {'host': 'http://api',
+    return {'host': "http://api",
             'port': 4567,
             'user': None,
             'password': None}
@@ -126,6 +126,26 @@ class TestSensuHandler(object):
         }
         assert not self.sensu_handler.deprecated_occurrence_filtering()
 
+    @patch.object(SensuHandler, 'filter_disabled', Mock())
+    @patch.object(SensuHandler, 'filter_silenced', Mock())
+    @patch.object(SensuHandler, 'filter_dependencies', Mock())
+    @patch.object(SensuHandler, 'filter_repeated', Mock())
+    def test_filter(self):
+        '''
+        Tests the filter method
+        '''
+        self.sensu_handler.event = {'check': {}}
+        dfe = 'sensu_plugin.handler.SensuHandler.deprecated_filtering_enabled'
+        dof = ('sensu_plugin.handler.SensuHandler' +
+               '.deprecated_occurrence_filtering')
+        with patch(dfe) as deprecated_filtering_enabled:
+            deprecated_filtering_enabled.return_value = True
+
+            with patch(dof) as deprecated_occurrence_filtering:
+                deprecated_occurrence_filtering.return_value = True
+
+                self.sensu_handler.filter()
+
     @patch('sensu_plugin.handler.requests.post')
     @patch('sensu_plugin.handler.requests.get')
     def test_api_request(self, mock_get, mock_post):
@@ -153,6 +173,30 @@ class TestSensuHandler(object):
             self.sensu_handler.api_request(method, 'foo')
             mock_method.assert_called_with('http://api:4567/foo',
                                            auth=('mock_user', 'mock_pass'))
+
+    @patch.dict(os.environ, {'SENSU_API_URL': "http://api:4567"})
+    def test_get_api_settings(self):
+        '''
+        Tests the get_api_settings method
+        '''
+        # Mock getting SENSU_API_URL environment var
+        print(self.sensu_handler.get_api_settings())
+        assert self.sensu_handler.get_api_settings() == mock_api_settings()
+
+    @patch.object(SensuHandler, 'api_request')
+    def test_stash_exists(self, mock_api_request):
+        '''
+        Tests the stash_exists method
+        '''
+        class RequestsMock(object):
+            def __init__(self, ret):
+                self.status_code = ret
+        # Mock stash exists
+        mock_api_request.return_value = RequestsMock(200)
+        assert self.sensu_handler.stash_exists('stash')
+        # Mock stash missing
+        mock_api_request.return_value = RequestsMock(404)
+        assert not self.sensu_handler.stash_exists('stash')
 
     @patch.object(SensuHandler, 'read_stdin', Mock())
     @patch.object(SensuHandler, 'read_event', Mock())
