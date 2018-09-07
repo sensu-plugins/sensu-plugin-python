@@ -42,7 +42,7 @@ class SensuHandler(object):
 
         # Parse the stdin into a global event object
         stdin = self.read_stdin()
-        self.read_event(stdin)
+        self.event = self.read_event(stdin)
 
         # Prepare global settings
         self.settings = get_settings()
