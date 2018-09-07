@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 # [Unreleased]
+
+# [0.5.1]
 ## Fixed
 - fix event reading into the handler (@barryorourke)
 
@@ -77,8 +79,9 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 ## [0.1.0] 2014-01-06
 - Initial release (@zsprackett)
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.5.0...HEAD
-[0.4.7]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.7...0.5.0
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.5.1...HEAD
+[0.5.1]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.5.0...0.5.1
+[0.5.0]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.7...0.5.0
 [0.4.7]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.6...0.4.7
 [0.4.5]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.5...0.4.6
 [0.4.4]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.4...0.4.5
