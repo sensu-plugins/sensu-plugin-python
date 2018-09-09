@@ -201,14 +201,16 @@ class TestSensuHandler(object):
         mock_api_request.return_value = RequestsMock(404)
         assert not self.sensu_handler.stash_exists('stash')
 
-    @patch.object(SensuHandler, 'read_stdin', Mock())
-    @patch.object(SensuHandler, 'read_event', Mock())
-    @patch('sensu_plugin.handler.get_settings', Mock())
     @patch.object(SensuHandler, 'get_api_settings', Mock())
-    @patch.object(SensuHandler, 'filter', Mock())
-    @patch.object(SensuHandler, 'handle', Mock())
+    @patch('sensu_plugin.handler.get_settings', Mock())
     def test_run(self):
         '''
         Tests the run method.
         '''
-        self.sensu_handler.run()
+
+        with patch('sensu_plugin.handler.sys.stdin') as mocked_stdin:
+            mocked_stdin.read = lambda: CHECK_RESULT
+            self.sensu_handler.run()
+
+            # event should be valid json
+            assert self.sensu_handler.event == json.loads(CHECK_RESULT)
