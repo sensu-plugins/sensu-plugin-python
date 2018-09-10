@@ -49,6 +49,12 @@ class SensuPlugin(object):
         if autorun:
             self.run()
 
+    def output(self, args):
+        '''
+        Print the output message.
+        '''
+        print("SensuPlugin: {}".format(' '.join(str(a) for a in args)))
+
     def __make_dynamic(self, method):
         '''
         Create a method for each of the exit codes.
@@ -57,7 +63,7 @@ class SensuPlugin(object):
             self.plugin_info['status'] = method
             if not args:
                 args = None
-            print("SensuPlugin: {}".format(' '.join(str(a) for a in args)))
+            self.output(args)
             sys.exit(getattr(self.exit_code, method))
 
         method_lc = method.lower()
