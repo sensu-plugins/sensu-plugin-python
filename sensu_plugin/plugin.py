@@ -21,19 +21,19 @@ class SensuPlugin(object):
     '''
     Base class used by both checks and metrics plugins.
     '''
-    def __init__(self):
+    def __init__(self, autorun=False):
 
-        # barryorourke: revist this later
         self.plugin_info = {
             'check_name': None,
             'message': None,
             'status': None
         }
-        self._hook = ExitHook()
-        self._hook.hook()
 
         # create a method for each of the exit codes
         # and register as exiy functions
+        self._hook = ExitHook()
+        self._hook.hook()
+
         self.exit_code = ExitCode(0, 1, 2, 3)
         for field in self.exit_code._fields:
             self.__make_dynamic(field)
@@ -46,10 +46,8 @@ class SensuPlugin(object):
             self.setup()
         (self.options, self.remain) = self.parser.parse_known_args()
 
-        self.run()
-
-    def output(self, args):
-        print("SensuPlugin: %s" % ' '.join(str(a) for a in args))
+        if autorun:
+            self.run()
 
     def __make_dynamic(self, method):
         '''
@@ -59,7 +57,7 @@ class SensuPlugin(object):
             self.plugin_info['status'] = method
             if not args:
                 args = None
-            self.output(args)
+            print("SensuPlugin: {}".format(' '.join(str(a) for a in args)))
             sys.exit(getattr(self.exit_code, method))
 
         method_lc = method.lower()
