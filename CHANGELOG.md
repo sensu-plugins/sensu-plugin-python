@@ -6,6 +6,9 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 # [Unreleased]
 ## Added
 - test that event data exists and is valid json (@barryorourke)
+- make testing plugins a lot easier (@barryorourke)
+- add docstrings to plugin.py (@barryorourke)
+- add tests for plugin.py (@barryorourke)
 
 # [0.5.1]
 ## Fixed
