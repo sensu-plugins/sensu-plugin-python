@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-# Copyright (C) 2014 - S. Zachariah Sprackett <zac@sprackett.com>
-#
-# Released under the same terms as Sensu (the MIT license); see LICENSE
-# for details.
-
 from __future__ import print_function
 from sensu_plugin.plugin import SensuPlugin
 
 
 class SensuPluginCheck(SensuPlugin):
+    '''
+    Class that inherits from SensuPlugin.
+    '''
     def check_name(self, name=None):
+        '''
+        Checks the plugin name and sets it accordingly.
+        Uses name if specified, class name if not set.
+        '''
         if name:
             self.plugin_info['check_name'] = name
 
