@@ -9,6 +9,8 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 - make testing plugins a lot easier (@barryorourke)
 - add docstrings to plugin.py (@barryorourke)
 - add tests for plugin.py (@barryorourke)
+- add docstrings to check.py (@barryorourke)
+- add tests to check.py (@barryorourke)
 
 # [0.5.1]
 ## Fixed
