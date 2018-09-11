@@ -7,6 +7,11 @@ try:
 except ImportError:
     from mock import Mock, patch
 
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 import pytest
 
 # Alter path and import modules
@@ -39,29 +44,33 @@ class TestSensuHandler(object):
         '''
         self.sensu_handler = SensuHandler(autorun=False)  # noqa
 
-    def test_handle(self):
+    @patch.object(SensuHandler, 'get_api_settings', Mock())
+    @patch('sensu_plugin.handler.get_settings', Mock())
+    def test_run(self):
+        '''
+        Tests the run method.
+        '''
+
+        # event should be valid json
+        with patch('sensu_plugin.handler.sys.stdin') as mocked_stdin:
+            mocked_stdin.read = lambda: CHECK_RESULT
+            self.sensu_handler.run()
+            assert self.sensu_handler.event == json.loads(CHECK_RESULT)
+
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_handle(self, out):
         '''
         Tests the handle method.
         '''
-
-        exit_msg = 'ignoring event -- no handler defined'
-        assert self.sensu_handler.handle() == exit_msg
+        self.sensu_handler.handle()
+        assert out.getvalue() == "ignoring event -- no handler defined.\n"
 
     def test_read_stdin(self):
         '''
         Tests the read_stdin method.
         '''
-
-        # Mock reading from stdin
+        # read_stdin should read something from stdin
         with patch('sensu_plugin.handler.sys.stdin') as mocked_stdin:
-
-            # Test with value 'sensu'
-            mocked_stdin.read = lambda: 'sensu'
-            assert self.sensu_handler.read_stdin() == 'sensu'
-
-            # Test with an example check value
-            mocked_stdin.read = lambda: CHECK_RESULT
-            assert self.sensu_handler.read_stdin() == CHECK_RESULT
             mocked_stdin.read = None
             with pytest.raises(ValueError):
                 self.sensu_handler.read_stdin()
@@ -73,9 +82,6 @@ class TestSensuHandler(object):
         '''
 
         read_event = self.sensu_handler.read_event
-
-        # Test with dummy json
-        assert isinstance(read_event('{ "sensu": "rocks" }'), dict)
 
         # Test with example check
         assert isinstance(read_event(CHECK_RESULT), dict)
@@ -89,42 +95,6 @@ class TestSensuHandler(object):
         # Test with a string (Fail)
         with pytest.raises(Exception):
             read_event('astring')
-
-    @patch.object(SensuHandler, 'read_stdin', CHECK_RESULT)
-    def test_filtering_enabled(self):  # noqa
-        '''
-        Tests the deprecated_filtering_enabled method.
-        '''
-
-        # Return True if explicilt set to True
-        self.sensu_handler.event = {
-            'check': {'enable_deprecated_filtering': True}
-        }
-
-        assert self.sensu_handler.deprecated_filtering_enabled()
-
-        # Return False if not set
-        self.sensu_handler.event = {
-            'check': {}
-        }
-        assert not self.sensu_handler.deprecated_filtering_enabled()
-
-    def test_occurrence_filtering(self):  # noqa
-        '''
-        Tests the deprecated_occurrence_filtering method.
-        '''
-
-        self.sensu_handler.event = {
-            'check': {
-                'enable_deprecated_occurrence_filtering': True
-            }
-        }
-        assert self.sensu_handler.deprecated_occurrence_filtering()
-
-        self.sensu_handler.event = {
-            'check': {}
-        }
-        assert not self.sensu_handler.deprecated_occurrence_filtering()
 
     @patch.object(SensuHandler, 'filter_disabled', Mock())
     @patch.object(SensuHandler, 'filter_silenced', Mock())
@@ -146,35 +116,24 @@ class TestSensuHandler(object):
 
                 self.sensu_handler.filter()
 
-    @patch('sensu_plugin.handler.requests.post')
-    @patch('sensu_plugin.handler.requests.get')
-    def test_api_request(self, mock_get, mock_post):
+    def test_occurrence_filtering(self):  # noqa
         '''
-        Tests the api_request method.
+        Tests the deprecated_occurrence_filtering method.
         '''
 
-        # No api_settings defined
-        with pytest.raises(AttributeError):
-            self.sensu_handler.api_request('GET', 'foo')
-        for mock_method, method in [(mock_get, 'GET'), (mock_post, 'POST')]:
-            # Should not supply auth
-            self.sensu_handler.api_settings = {
-                'host': 'http://api',
-                'port': 4567
+        self.sensu_handler.event = {
+            'check': {
+                'enable_deprecated_occurrence_filtering': True
             }
-            self.sensu_handler.api_request(method, 'foo')
-            mock_method.assert_called_with('http://api:4567/foo', auth=())
-            # Should still not supply any auth as it requires password too
-            self.sensu_handler.api_settings['user'] = 'mock_user'
-            self.sensu_handler.api_request(method, 'foo')
-            mock_method.assert_called_with('http://api:4567/foo', auth=())
-#
-            # Should supply auth
-            self.sensu_handler.api_settings['password'] = 'mock_pass'
-            self.sensu_handler.api_request(method, 'foo')
-            mock_method.assert_called_with('http://api:4567/foo',
-                                           auth=('mock_user', 'mock_pass'))
+        }
+        assert self.sensu_handler.deprecated_occurrence_filtering()
 
+        self.sensu_handler.event = {
+            'check': {}
+        }
+        assert not self.sensu_handler.deprecated_occurrence_filtering()
+
+    # TODO: add test_bail here.
     @patch.dict(os.environ, {'SENSU_API_URL': "http://api:4567"})
     def test_get_api_settings(self):
         '''
@@ -201,16 +160,31 @@ class TestSensuHandler(object):
         mock_api_request.return_value = RequestsMock(404)
         assert not self.sensu_handler.stash_exists('stash')
 
-    @patch.object(SensuHandler, 'get_api_settings', Mock())
-    @patch('sensu_plugin.handler.get_settings', Mock())
-    def test_run(self):
+    @patch('sensu_plugin.handler.requests.post')
+    @patch('sensu_plugin.handler.requests.get')
+    def test_api_request(self, mock_get, mock_post):
         '''
-        Tests the run method.
+        Tests the api_request method.
         '''
 
-        with patch('sensu_plugin.handler.sys.stdin') as mocked_stdin:
-            mocked_stdin.read = lambda: CHECK_RESULT
-            self.sensu_handler.run()
+        # No api_settings defined
+        with pytest.raises(AttributeError):
+            self.sensu_handler.api_request('GET', 'foo')
+        for mock_method, method in [(mock_get, 'GET'), (mock_post, 'POST')]:
+            # Should not supply auth
+            self.sensu_handler.api_settings = {
+                'host': 'http://api',
+                'port': 4567
+            }
+            self.sensu_handler.api_request(method, 'foo')
+            mock_method.assert_called_with('http://api:4567/foo', auth=())
+            # Should still not supply any auth as it requires password too
+            self.sensu_handler.api_settings['user'] = 'mock_user'
+            self.sensu_handler.api_request(method, 'foo')
+            mock_method.assert_called_with('http://api:4567/foo', auth=())
 
-            # event should be valid json
-            assert self.sensu_handler.event == json.loads(CHECK_RESULT)
+            # Should supply auth
+            self.sensu_handler.api_settings['password'] = 'mock_pass'
+            self.sensu_handler.api_request(method, 'foo')
+            mock_method.assert_called_with('http://api:4567/foo',
+                                           auth=('mock_user', 'mock_pass'))

@@ -84,7 +84,7 @@ class SensuHandler(object):
         '''
         Method that should be overwritten to provide handler logic.
         '''
-        return 'ignoring event -- no handler defined'
+        print("ignoring event -- no handler defined.")
 
     def filter(self):
         '''
