@@ -21,7 +21,7 @@ class SensuPlugin(object):
     '''
     Base class used by both checks and metrics plugins.
     '''
-    def __init__(self, autorun=False):
+    def __init__(self, autorun=True):
 
         self.plugin_info = {
             'check_name': None,
