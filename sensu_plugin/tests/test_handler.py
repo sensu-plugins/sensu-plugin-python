@@ -133,7 +133,6 @@ class TestSensuHandler(object):
         }
         assert not self.sensu_handler.deprecated_occurrence_filtering()
 
-    # TODO: add test_bail here.
     @patch.dict(os.environ, {'SENSU_API_URL': "http://api:4567"})
     def test_get_api_settings(self):
         '''
