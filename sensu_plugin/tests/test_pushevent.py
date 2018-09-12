@@ -7,7 +7,7 @@ import pytest
 
 from sensu_plugin.pushevent import push_event
 
-@patch("socket.socket", Mock())
+
 def test_push_event():
     '''
     tests the push_event method.
