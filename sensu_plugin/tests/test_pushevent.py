@@ -1,8 +1,3 @@
-try:
-    from unittest.mock import Mock, patch
-except ImportError:
-    from mock import Mock, patch
-
 import pytest
 
 from sensu_plugin.pushevent import push_event
