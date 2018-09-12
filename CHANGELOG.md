@@ -11,6 +11,7 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 - add tests for plugin.py (@barryorourke)
 - add docstrings to check.py (@barryorourke)
 - add tests to check.py (@barryorourke)
+- add basic tests for push events (@barryorourke)
 
 # [0.5.1]
 ## Fixed
