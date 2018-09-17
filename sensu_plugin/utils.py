@@ -5,6 +5,8 @@ Utilities for loading config files, etc.
 import os
 import json
 
+from copy import deepcopy
+
 
 def config_files():
     '''
@@ -83,7 +85,7 @@ def map_v2_event_into_v1(event):
     event = json.loads(event)
 
     # Trigger mapping code if enity exists and client does not
-    if "client" not in event and "entity" in event:
+    if not bool(event.get('client')) and "entity" in event:
         event['client'] = event['entity']
 
         # Fill in missing client attributes
@@ -111,16 +113,22 @@ def map_v2_event_into_v1(event):
             state = "unknown::2.0_event"
 
         if "action" not in event:
-            event['action'] = action_state_mapping[state.lower()]
+            if state.lower() in action_state_mapping:
+                event['action'] = action_state_mapping[state.lower()]
+            else:
+                event['action'] = state
 
         # Mimic 1.4 event history based on 2.0 event history
         if "history" in event['check']:
             # save the original history
-            history_v2 = event['check']['history']
-            event['check']['history_v2'] = history_v2
+            event['check']['history_v2'] = deepcopy(event['check']['history'])
             legacy_history = []
             for history in event['check']['history']:
-                legacy_history.append(str(history['status']))
+                if isinstance(history['status'], int):
+                    legacy_history.append(str(history['status']))
+                else:
+                    legacy_history.append("3")
+
             event['check']['history'] = legacy_history
 
         # Setting flag indicating this function has already been called
