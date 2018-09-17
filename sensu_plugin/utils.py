@@ -81,9 +81,6 @@ def map_v2_event_into_v1(event):
     if "v2_event_mapped_into_v1" in event:
         return event
 
-    # convert the event into a dict
-    event = json.loads(event)
-
     # Trigger mapping code if enity exists and client does not
     if not bool(event.get('client')) and "entity" in event:
         event['client'] = event['entity']
@@ -134,4 +131,4 @@ def map_v2_event_into_v1(event):
         event['v2_event_mapped_into_v1'] = True
 
     # return the updated event
-    return json.dumps(event)
+    return event
