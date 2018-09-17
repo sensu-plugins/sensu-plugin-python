@@ -112,11 +112,10 @@ def map_v2_event_into_v1(event):
         else:
             state = "unknown::2.0_event"
 
-        if "action" not in event:
-            if state.lower() in action_state_mapping:
-                event['action'] = action_state_mapping[state.lower()]
-            else:
-                event['action'] = state
+        if "action" not in event and state.lower() in action_state_mapping:
+            event['action'] = action_state_mapping[state.lower()]
+        else:
+            event['action'] = state
 
         # Mimic 1.4 event history based on 2.0 event history
         if "history" in event['check']:
