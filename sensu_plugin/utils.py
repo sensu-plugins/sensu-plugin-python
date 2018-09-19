@@ -5,6 +5,8 @@ Utilities for loading config files, etc.
 import os
 import json
 
+from copy import deepcopy
+
 
 def config_files():
     '''
@@ -68,3 +70,65 @@ def deep_merge(dict_one, dict_two):
         else:
             merged[key] = value
     return merged
+
+
+def map_v2_event_into_v1(event):
+    '''
+    Helper method to convert Sensu 2.x event into Sensu 1.x event.
+    '''
+
+    # return the event if it has already been mapped
+    if "v2_event_mapped_into_v1" in event:
+        return event
+
+    # Trigger mapping code if enity exists and client does not
+    if not bool(event.get('client')) and "entity" in event:
+        event['client'] = event['entity']
+
+        # Fill in missing client attributes
+        if "name" not in event['client']:
+            event['client']['name'] = event['entity']['id']
+
+        if "subscribers" not in event['client']:
+            event['client']['subscribers'] = event['entity']['subscriptions']
+
+        # Fill in renamed check attributes expected in 1.4 event
+        if "subscribers" not in event['check']:
+            event['check']['subscribers'] = event['check']['subscriptions']
+
+        if "source" not in event['check']:
+            event['check']['source'] = event['check']['proxy_entity_id']
+
+        # Mimic 1.4 event action based on 2.0 event state
+        #  action used in logs and fluentd plugins handlers
+        action_state_mapping = {'flapping': 'flapping', 'passing': 'resolve',
+                                'failing': 'create'}
+
+        if "state" in event['check']:
+            state = event['check']['state']
+        else:
+            state = "unknown::2.0_event"
+
+        if "action" not in event and state.lower() in action_state_mapping:
+            event['action'] = action_state_mapping[state.lower()]
+        else:
+            event['action'] = state
+
+        # Mimic 1.4 event history based on 2.0 event history
+        if "history" in event['check']:
+            # save the original history
+            event['check']['history_v2'] = deepcopy(event['check']['history'])
+            legacy_history = []
+            for history in event['check']['history']:
+                if isinstance(history['status'], int):
+                    legacy_history.append(str(history['status']))
+                else:
+                    legacy_history.append("3")
+
+            event['check']['history'] = legacy_history
+
+        # Setting flag indicating this function has already been called
+        event['v2_event_mapped_into_v1'] = True
+
+    # return the updated event
+    return event

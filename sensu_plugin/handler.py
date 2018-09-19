@@ -21,7 +21,7 @@ try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse
-from sensu_plugin.utils import get_settings
+from sensu_plugin.utils import get_settings, map_v2_event_into_v1
 
 
 class SensuHandler(object):
@@ -48,11 +48,23 @@ class SensuHandler(object):
         self.settings = get_settings()
         self.api_settings = self.get_api_settings()
 
-        # Prepare command line arguments
+        # Prepare command line arguments and
         self.parser = argparse.ArgumentParser()
+
+        # set up the 2.x to 1.x event mapping argument
+        self.parser.add_argument("--map-v2-event-into-v1",
+                                 action="store_true",
+                                 default=False,
+                                 dest="v2event")
+
         if hasattr(self, 'setup'):
             self.setup()
         (self.options, self.remain) = self.parser.parse_known_args()
+
+        # map the event if required
+        if (self.options.v2event or
+                os.environ.get("SENSU_MAP_V2_EVENT_INTO_V1")):
+            self.event = map_v2_event_into_v1(self.event)
 
         # Filter (deprecated) and handle
         self.filter()

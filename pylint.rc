@@ -42,7 +42,7 @@ load-plugins=
 #    W0221: arguments-differ
 # BOR-TODO: look into W0211 more
 # BOR-TODO: remove R0205 when we drop python 2.7 support
-disable=E1101,R0201,W0212,C0111,R0903,E0602,R0204,W0221,R0205
+disable=E1101,R0201,W0212,C0111,R0903,E0602,R0204,W0221,R0205,R0912
 
 
 
