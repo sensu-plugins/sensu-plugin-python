@@ -5,6 +5,13 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 
 # [Unreleased]
 
+# [0.6.0]
+## Added
+- Added map_v2_event_into_v1 method to Utils for all plugin classes to use. (@barryorourke)
+- Added --map-v2-event-into-v1 runtime commandline option to base Handler class. (@barryorourke)
+- Alternatively set envvar SENSU_MAP_V2_EVENT_INTO_V1=1 and handlers will automatically attempt to map 2.x event data. (@barryorourke)
+- Mapping function sets and checks for boolean event attribute 'v2_event_mapped_into_v1', to prevent mapping from running multiple times in same pipeline. (@barryorourke)
+
 # [0.5.2]
 ## Added
 - test that event data exists and is valid json (@barryorourke)
@@ -89,8 +96,9 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 ## [0.1.0] 2014-01-06
 - Initial release (@zsprackett)
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.5.2...HEAD
-[0.5.1]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.5.1...0.5.2
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.6.0...HEAD
+[0.6.0]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.5.2...0.6.0
+[0.5.2]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.5.1...0.5.2
 [0.5.1]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.5.0...0.5.1
 [0.5.0]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.7...0.5.0
 [0.4.7]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.4.6...0.4.7
