@@ -34,12 +34,12 @@ def test_get_settings_with_file():
     mocked_open = mock_open(read_data=test_json)
     with patch('os.listdir') as mocked_listdir:
         try:
-            with patch("__builtin__.open", mocked_open):
+            with patch("builtins.open", mocked_open):
                 mocked_listdir.return_value = ['/etc/sensu/conf.d/test.json']
                 settings = get_settings()
                 assert settings == {'test': {'key': 'value'}}
-        except ModuleNotFoundError:
-            with patch("builtins.open", mocked_open):
+        except ImportError:
+            with patch("__builtin__.open", mocked_open):
                 mocked_listdir.return_value = ['/etc/sensu/conf.d/test.json']
                 settings = get_settings()
                 assert settings == {'test': {'key': 'value'}}
