@@ -26,12 +26,16 @@ def test_get_settings_no_files():
         assert settings == {}
 
 
-def test_get_settings_with_file():
+@patch('os.path.isfile')
+@patch('os.path.isdir')
+def test_get_settings_with_file(mock_isfile, mock_isdir):
     '''
     Test the get settings method with one file.
     '''
     test_json = '{"test": { "key": "value"}}'
     mocked_open = mock_open(read_data=test_json)
+    mock_isfile.return_value = True
+    mock_isdir.return_value = True
     with patch('os.listdir') as mocked_listdir:
         try:
             with patch("builtins.open", mocked_open):
