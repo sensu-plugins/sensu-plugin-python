@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 # [Unreleased]
+
+# [0.7.1]
 - Make get_settings() sensu 2.0 compatible. (@barryorourke)
 
 # [0.7.0]
@@ -101,7 +103,8 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 ## [0.1.0] 2014-01-06
 - Initial release (@zsprackett)
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.7.0...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.7.1...HEAD
+[0.7.0]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.7.0...0.7.1
 [0.7.0]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.6.0...0.7.0
 [0.6.0]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.5.2...0.6.0
 [0.5.2]: https://github.com/sensu-plugins/sensu-plugin-python/compare/0.5.1...0.5.2
