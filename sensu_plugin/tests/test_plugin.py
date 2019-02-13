@@ -18,7 +18,6 @@ def mock_plugin_info():
 
 
 class TestSensuPlugin(object):
-    @pytest.fixture(autouse=True)
     def __init__(self):
         self.sensu_plugin = None
 
