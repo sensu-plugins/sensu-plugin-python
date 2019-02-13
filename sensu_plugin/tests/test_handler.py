@@ -34,7 +34,6 @@ def mock_api_settings():
 
 
 class TestSensuHandler(object):
-    @pytest.fixture(autouse=True)
     def __init__(self):
         self.sensu_handler = None
 

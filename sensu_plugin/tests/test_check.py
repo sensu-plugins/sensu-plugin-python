@@ -3,13 +3,10 @@ try:
 except ImportError:
     from mock import Mock, patch
 
-import pytest
-
 from sensu_plugin.check import SensuPluginCheck
 
 
 class TestSensuPluginCheck(object):
-    @pytest.fixture(autouse=True)
     def __init__(self):
         self.sensu_plugin_check = None
 
