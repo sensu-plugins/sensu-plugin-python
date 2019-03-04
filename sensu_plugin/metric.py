@@ -70,3 +70,23 @@ class SensuPluginMetricGraphite(SensuPluginMetric):
                 args[2] = (int(time.time()))
             # produce the output
             print(" ".join(str(s) for s in args[0:3]))
+
+
+class SensuPluginMetricInfluxdb(SensuPluginMetric):
+    def output(self, *args):
+        # sanitise the arguments
+        args = self.sanitise_arguments(args)
+        if args:
+            # determine whether a single value has been passed
+            # as fields and if so give it a name.
+            fields = args[1]
+            if fields.isnumeric():
+                fields = "value={}".format(args[1])
+            # append tags on to the measurement name if they exist
+            measurement = args[0]
+            if len(args) > 2:
+                measurement = "{},{}".format(args[0], args[2])
+            # create a timestamp
+            timestamp = int(time.time())
+            # produce the output
+            print("{} {} {}".format(measurement, fields, timestamp))

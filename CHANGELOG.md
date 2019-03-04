@@ -7,6 +7,7 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 ### Added
 
 - Start working on a complete refactor of the metrics code, with the intention of making it feature compatible with the ruby gem. (@borourke) 
+- Added a new class SensuPluginsMetricInfluxdb, which outputs the results in influxdb line format. (@borourke)
 
 ### Fixed
 
