@@ -32,7 +32,7 @@ run_nosetests() {
 NOSETESTS ---------------------------------------------------------------------'
 
   nosetests --with-coverage --cover-package=sensu_plugin \
-            --cover-min-percentage=80 --cover-tests --cover-erase \
+            --cover-min-percentage=75 --cover-tests --cover-erase \
             --cover-html --cover-html-dir=./report -w sensu_plugin/tests \
             --exe
   # --exe means to run all executable tests

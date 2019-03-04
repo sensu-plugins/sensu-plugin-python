@@ -4,8 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 # [Unreleased]
+### Added
+
+- Start working on a complete refactor of the metrics code, with the intention of making it feature compatible with the ruby gem. (@borourke) 
+
 ### Fixed
 
+- metrics checks based on SensuPluginsMetricGraphite should now function properly when passed an exception, empty status or a status message. (@borourke)
 - Update tests so that they run with pytest > 4.0. (@borourke)
 
 # [0.7.1]
