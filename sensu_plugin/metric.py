@@ -37,7 +37,7 @@ class SensuPluginMetricStatsd(SensuPlugin):
             print("|".join([":".join(str(s) for s in l_args[0:2]), stype]))
 
 
-class SensuPluginMetric(SensuPlugin):
+class SensuPluginMetricGeneric(SensuPlugin):
     def sanitise_arguments(self, args):
         # check whether the arguments have been passed by a dynamic status code
         # or if the output method is being called directly
@@ -56,7 +56,7 @@ class SensuPluginMetric(SensuPlugin):
             return args
 
 
-class SensuPluginMetricGraphite(SensuPluginMetric):
+class SensuPluginMetricGraphite(SensuPluginMetricGeneric):
     def output(self, *args):
         # sanitise the arguments
         args = self.sanitise_arguments(args)
@@ -72,7 +72,7 @@ class SensuPluginMetricGraphite(SensuPluginMetric):
             print(" ".join(str(s) for s in args[0:3]))
 
 
-class SensuPluginMetricInfluxdb(SensuPluginMetric):
+class SensuPluginMetricInfluxdb(SensuPluginMetricGeneric):
     def output(self, *args):
         # sanitise the arguments
         args = self.sanitise_arguments(args)
