@@ -1,11 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-# Copyright (C) 2014 - S. Zachariah Sprackett <zac@sprackett.com>
-#
-# Released under the same terms as Sensu (the MIT license); see LICENSE
-# for details.
-
 '''
 This provides a base SensuHandler class that can be used for writing
 python-based Sensu handlers.
