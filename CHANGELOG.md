@@ -4,8 +4,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 # [Unreleased]
+### Added
+
+- Add new class SensuPluginMetricsGeneric, this will be extended in future to act in a similar way to its Ruby counterpart. (@borourke) 
+- Added a new class SensuPluginMetricInfluxdb, which outputs the results in influxdb line format. (@borourke)
+- Add basic tests for the Metrics classes. (@borourke)
+
 ### Fixed
 
+- Refactor metrics classes, they should now function properly when passed an exception, empty status or a status message. (@borourke)
 - Update tests so that they run with pytest > 4.0. (@borourke)
 
 # [0.7.1]

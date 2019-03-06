@@ -72,42 +72,56 @@ The check submits the check in json format.  Arbitrary extra fields can be added
 
 ## Metrics
 
-### JSON
+For a metric you can subclass one of the following;
 
-    from sensu_plugin import SensuPluginMetricJSON
-
-    class FooBarBazMetricJSON(SensuPluginMetricJSON):
-        def run(self):
-            self.ok({'foo': 1, 'bar': { 'baz': 'stuff' } })
-
-    if __name__ == "__main__":
-    f = FooBarBazMetricJSON()
+* SensuPluginMetricGraphite
+* SensuPluginMetricInfluxdb
+* SensuPluginMetricJSON
+* SensuPluginMetricStatsd
 
 ### Graphite
 
     from sensu_plugin import SensuPluginMetricGraphite
 
-    class FooBarBazMetricGraphite(SensuPluginMetricGraphite):
+    class MyGraphiteMetric (SensuPluginMetricGraphite):
         def run(self):
-            self.output('a', 1)
-            self.output('b', 2)
-            self.ok()
+            self.ok('sensu', 1)
 
     if __name__ == "__main__":
-    f = FooBarBazMetricGraphite()
+        metric = MyGraphiteMetric()
+
+### Influxdb
+
+    from sensu_plugin import SensuPluginMetricInfluxdb
+
+    class MyInfluxdbMetric (SensuPluginMetricInfluxdb):
+        def run(self):
+            self.ok('sensu', 'baz=42', 'env=prod,location=us-midwest')
+
+    if __name__ == "__main__":
+        metric = MyInfluxdbMetric()
+
+### JSON
+
+    from sensu_plugin import SensuPluginMetricJSON
+
+    class MyJSONMetric(OLDSensuPluginMetricJSON):
+        def run(self):
+            self.ok({'foo': 1, 'bar': 'anything'})
+
+    if __name__ == "__main__":
+        metric = MyJSONMetric()
 
 ### StatsD
 
     from sensu_plugin import SensuPluginMetricStatsd
 
-    class FooBarBazMetricStatsd(SensuPluginMetricStatsd):
+    class MyStatsdMetric(SensuPluginMetricStatsd):
         def run(self):
-            self.output('a', 1, 'ms')
-            self.output('b.c.d', 15)
-            self.ok()
+            self.ok('sensu.baz', 42, 'g')
 
     if __name__ == "__main__":
-    f = FooBarBazMetricStatsd()
+        metric = MyStatsdMetric()
 
 ## License
 
