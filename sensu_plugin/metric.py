@@ -56,7 +56,7 @@ class SensuPluginMetricInfluxdb(SensuPluginMetricGeneric):
             # determine whether a single value has been passed
             # as fields and if so give it a name.
             fields = args[1]
-            if fields.isnumeric():
+            if fields.isdigit():
                 fields = "value={}".format(args[1])
             # append tags on to the measurement name if they exist
             measurement = args[0]
