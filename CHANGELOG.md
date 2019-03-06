@@ -8,6 +8,7 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 
 - Add new class SensuPluginMetricsGeneric, this will be extended in future to act in a similar way to its Ruby counterpart. (@borourke) 
 - Added a new class SensuPluginMetricInfluxdb, which outputs the results in influxdb line format. (@borourke)
+- Add basic tests for the Metrics classes. (@borourke)
 
 ### Fixed
 
