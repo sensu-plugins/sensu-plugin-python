@@ -6,12 +6,12 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 # [Unreleased]
 ### Added
 
-- Start working on a complete refactor of the metrics code, with the intention of making it feature compatible with the ruby gem. (@borourke) 
-- Added a new class SensuPluginsMetricInfluxdb, which outputs the results in influxdb line format. (@borourke)
+- Add new class SensuPluginMetricsGeneric, this will be extended in future to act in a similar way to its Ruby counterpart. (@borourke) 
+- Added a new class SensuPluginMetricInfluxdb, which outputs the results in influxdb line format. (@borourke)
 
 ### Fixed
 
-- metrics checks based on SensuPluginsMetricGraphite should now function properly when passed an exception, empty status or a status message. (@borourke)
+- Refactor metrics classes, they should now function properly when passed an exception, empty status or a status message. (@borourke)
 - Update tests so that they run with pytest > 4.0. (@borourke)
 
 # [0.7.1]

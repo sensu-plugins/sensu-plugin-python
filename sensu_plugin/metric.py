@@ -13,30 +13,6 @@ from sensu_plugin.plugin import SensuPlugin
 from sensu_plugin.compat import compat_basestring
 
 
-class SensuPluginMetricJSON(SensuPlugin):
-    def output(self, args):
-        obj = args[0]
-        if isinstance(obj, (Exception, compat_basestring)):
-            print(obj)
-        elif isinstance(obj, (dict, list)):
-            print(json.dumps(obj))
-
-
-class SensuPluginMetricStatsd(SensuPlugin):
-    def output(self, *args):
-        if args[0] is None:
-            print()
-        elif isinstance(args[0], Exception) or args[1] is None:
-            print(args[0])
-        else:
-            l_args = list(args)
-            if len(l_args) < 3 or l_args[2] is None:
-                stype = 'kv'
-            else:
-                stype = l_args[2]
-            print("|".join([":".join(str(s) for s in l_args[0:2]), stype]))
-
-
 class SensuPluginMetricGeneric(SensuPlugin):
     def sanitise_arguments(self, args):
         # check whether the arguments have been passed by a dynamic status code
@@ -90,3 +66,27 @@ class SensuPluginMetricInfluxdb(SensuPluginMetricGeneric):
             timestamp = int(time.time())
             # produce the output
             print("{} {} {}".format(measurement, fields, timestamp))
+
+
+class SensuPluginMetricJSON(SensuPluginMetricGeneric):
+    def output(self, args):
+        obj = args[0]
+        if isinstance(obj, (Exception, compat_basestring)):
+            print(obj[0])
+        elif isinstance(obj, (dict, list)):
+            print(json.dumps(obj))
+
+
+class SensuPluginMetricStatsd(SensuPluginMetricGeneric):
+    def output(self, *args):
+        # sanitise the arguments
+        args = self.sanitise_arguments(args)
+        if args:
+            # convert the arguments to a list
+            args = list(args)
+            if len(args) < 3 or args[2] is None:
+                stype = 'kv'
+            else:
+                stype = args[2]
+            # produce the output
+            print("|".join([":".join(str(s) for s in args[0:2]), stype]))
