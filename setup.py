@@ -8,7 +8,6 @@ setup(
     packages=['sensu_plugin', 'sensu_plugin.tests'],
     scripts=[],
     url='https://github.com/sensu-plugins/sensu-plugin-python',
-    license='LICENSE.txt',
     description='A framework for writing Python sensu plugins.',
     long_description="""
     """,
@@ -23,5 +22,11 @@ setup(
         'nose',
         'pytest',
         'mock'
+    ],
+    classifiers=[
+        'Programming Language :: Python :: 2.7',
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
     ],
 )

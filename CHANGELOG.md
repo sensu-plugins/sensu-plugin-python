@@ -14,6 +14,7 @@ This CHANGELOG follows the format listed [here](https://github.com/sensu-plugins
 
 - Refactor metrics classes, they should now function properly when passed an exception, empty status or a status message. (@borourke)
 - Update tests so that they run with pytest > 4.0. (@borourke)
+- Updated setup.py to include classifiers as per https://packaging.python.org/tutorials/packaging-projects. (@borourke)
 
 # [0.7.1]
 ### Added
