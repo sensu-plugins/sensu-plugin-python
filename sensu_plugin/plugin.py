@@ -11,6 +11,7 @@ import traceback
 from collections import namedtuple
 
 from sensu_plugin.exithook import ExitHook
+from sensu_plugin import utils
 
 # create a namedtuple of all valid exit codes
 ExitCode = namedtuple('ExitCode', ['OK', 'WARNING', 'CRITICAL', 'UNKNOWN'])
@@ -32,6 +33,8 @@ class SensuPlugin(object):
         # and register as exiy functions
         self._hook = ExitHook()
         self._hook.hook()
+
+        self.settings = utils.get_settings()
 
         self.exit_code = ExitCode(0, 1, 2, 3)
         for field in self.exit_code._fields:
